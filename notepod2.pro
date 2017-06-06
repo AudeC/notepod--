@@ -33,7 +33,8 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     notesmanager.h \
-    timing.h
+    timing.h \
+    main.h
 
 FORMS += \
         mainwindow.ui \

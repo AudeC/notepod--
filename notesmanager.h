@@ -1,14 +1,9 @@
 #if !defined(_NOTES_H)
 #define _NOTES_H
 
-#include <QString>
-#include <iostream>
 #include "timing.h"
-#include <vector>
-using namespace std;
+#include "main.h"
 
-
-enum Mediatype { image, son, video };
 
 namespace NOTES {
     class NotesException {
@@ -20,12 +15,13 @@ namespace NOTES {
     };
 
     class Note {
-        friend class NotesManager;
         QString id;
         QString title;
         TIME::Date creation;
         TIME::Date modification;
         bool actif;
+        friend class NotesManager;
+        friend class MainWindow;
 
     protected:
         //Note& operator=(const Note& a);
@@ -41,45 +37,62 @@ namespace NOTES {
         TIME::Date getModification() const { return modification; }
         void setTitle(const QString& t);
         void archiver();
+        virtual QString getClass() const { return "Note"; }
+        virtual void visualiser(Ui::MainWindow * ui);
     };
 
     class Article : public Note
     {
         friend class NotesManager;
+        friend class MainWindow;
         QString texte;
-        Article(const QString& i, const QString& ti, const QString& te) : Note(i, ti), texte(te) {}
+
+
     public:
+         Article(const QString& i, const QString& ti, const QString& te) : Note(i, ti), texte(te) {}
         QString getTexte() const { return texte; }
         void setTexte(const QString& s) { texte = s;  }
+        QString getClass() const { return "Article"; }
+          virtual void visualiser(Ui::MainWindow * ui);
 
     };
     class Media : public Note
     {
-        friend class NotesManager;
+
         QString texte;
         enum Mediatype type;
-        Media(const QString& i, const QString& ti, enum Mediatype m, const QString& te) : Note(i, ti), texte(te), type(m) {}
+
+        friend class NotesManager;
+        friend class MainWindow;
     public:
         QString getTexte() const { return texte; }
         enum Mediatype getType() const { return type; }
         void setTexte(const QString& t) { texte = t;  }
         void setType(enum Mediatype m) { type = m;  }
+        QString getClass() const { return "Media"; }
+        Media(const QString& i, const QString& ti, enum Mediatype m, const QString& te) : Note(i, ti), texte(te), type(m) {}
+         virtual  void visualiser(Ui::MainWindow * ui);
     };
     class Tache: public Note
     {
-        friend class NotesManager;
+
         QString action;
         int priorite;
         TIME::Date echeance;
-        Tache(const QString& i, const QString& ti, const QString& a, int p = 0, TIME::Date e = 0):
-            Note(i ,ti), action(a), priorite(p), echeance(e){}
+
+        friend class NotesManager;
+        friend class MainWindow;
     public:
+        Tache(const QString& i, const QString& ti, const QString& a, int p = 0, TIME::Date e = TIME::Date()):
+            Note(i ,ti), action(a), priorite(p), echeance(e){}
         QString getAction() const{ return action; }
         int getPriorite() const{ return priorite; }
         TIME::Date getEcheance() const { return echeance; }
         void setAction(const QString& s) { action = s;  }
         void setPriorite(int i) { priorite = i; }
         void setEcheance(TIME::Date d) { echeance = d;  }
+        QString getClass() const { return "Tache"; }
+         virtual  void visualiser(Ui::MainWindow * ui);
     };
     class Relation
     {
@@ -125,9 +138,9 @@ namespace NOTES {
             couples.push_back(Couple(m1, m2, la));
         }
 
-
-
     };
+
+
 
     class NotesManager {
     public:
@@ -143,7 +156,7 @@ namespace NOTES {
         };
 
     private:
-        vector<Note> notes;
+        vector<Note*> notes;
         vector<Relation> relations;
         QString filename;
         static Handler handler;
@@ -174,7 +187,7 @@ namespace NOTES {
         Media& getNewMedia(const QString& id, enum Mediatype m = image);
         Relation& getNewRelation(const QString& n, const QString& d = "", bool o = false);
         Relation& getRelation(const QString& n);
-        vector<Note> getNotes(){ return notes; }
+        vector<Note*> getNotes(){ return notes; }
         void load(const QString& f);
         void save() const;
         virtual ~NotesManager()
@@ -274,6 +287,7 @@ namespace NOTES {
         */
 
     };
+
 
 
 }

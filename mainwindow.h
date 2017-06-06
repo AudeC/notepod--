@@ -5,15 +5,8 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include "main.h"
 #include "notesmanager.h"
-
-namespace Ui {
-class MainWindow;
-class Ajout;
-}
-
-class MainWindow;
-class Ajout;
 
 class MainWindow : public QMainWindow, private NOTES::NotesManager
 {
@@ -27,7 +20,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void ajouterNote(NOTES::Note *a);
-
+    void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
 
 public slots:
     void visualiserNote(QListWidgetItem * a);

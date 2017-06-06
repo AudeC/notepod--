@@ -1,6 +1,12 @@
 
 #include "notesmanager.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include <fstream>
+string qtostd(QString o){
+    return o.toLocal8Bit().constData();
+                        }
+
 
 using namespace TIME;
 
@@ -12,6 +18,29 @@ namespace NOTES {
     void Note::archiver()
     {
         actif = false;
+    }
+
+    void Note::visualiser(Ui::MainWindow * ui){
+        ui->editTitre->setText(title);
+    }
+
+    void Article::visualiser(Ui::MainWindow * ui){
+        ui->editTitre->setText("getTitle()");
+        ui->editTexte->setText(texte);
+         ui->visuCont->show();
+          ui->editTexte->show();
+    }
+
+    void Media::visualiser(Ui::MainWindow * ui){
+        ui->editTitre->setText(getTitle());
+    }
+
+    void Tache::visualiser(Ui::MainWindow * ui){
+        ui->editTitre->setText(getTitle());
+        ui->editAction->show();
+        ui->editAction->setText(action);
+        ui->editPrio->show();
+        ui->visuPrio->show();
     }
 
     //NotesManager* NotesManager::instanceUnique= nullptr;
@@ -33,10 +62,10 @@ namespace NOTES {
 
     void NotesManager::addNote(Note* a) {
 
-        for (Note i : notes) {
-            if (i.getId() == a->getId()) throw NotesException("error, creation of an already existent note");
+        for (Note* i : notes) {
+            if (i->getId() == a->getId()) throw NotesException("error, creation of an already existent note");
         }
-        notes.push_back(*a);
+        notes.push_back(a);
         std::cout<< "Nouvelle note insérée avec succès";
 
     }
@@ -48,8 +77,11 @@ namespace NOTES {
 
     Note& NotesManager::getNote(const QString& id) {
         int j = 0;
-        for (Note i : notes) {
-            if (i.getId() == id) return notes[j];
+        for (Note* i : notes) {
+            if (i->getId() == id) {
+                std::cout<< qtostd(notes[j]->getClass());
+                return *notes[j];
+            }
             j++;
         }
         throw NotesException("error, nonexistent note");
@@ -99,8 +131,8 @@ namespace NOTES {
 
     void NotesManager::save() const {
         ofstream fout(filename.toLocal8Bit().constData());
-        for (Note i : notes) {
-            fout << i;
+        for (Note* i : notes) {
+            fout << *i;
         }
         fout.close();
     }

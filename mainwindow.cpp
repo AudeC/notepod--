@@ -13,10 +13,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuAjout->addAction(actionNouveau);
     connect(actionNouveau, SIGNAL(triggered()), fenAjout, SLOT(open()));
 
+    // Test
+    addNote(new NOTES::Article("test1", "Je suis un test", "Mon beau texte"));
+    addNote(new NOTES::Media("media1", "Mediapart", son, "Notepod c'est trop bien"));
+   addNote(new NOTES::Tache("travailler", "BosserLO21", "Au boulot", 1));
+
+
     // Ajout des notes
-    for(NOTES::Note i : getNotes())
+    for(NOTES::Note* i : getNotes())
     {
-        ui->listeNotes->addItem(i.getId());
+        ui->listeNotes->addItem(i->getId());
     }
     connect(ui->listeNotes, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(visualiserNote(QListWidgetItem*)));
 
@@ -29,9 +35,19 @@ void MainWindow::ajouterNote(NOTES::Note *a){
 }
 
 void MainWindow::visualiserNote(QListWidgetItem * i){
+
+    // Cacher les parties spéciales
+    ui->visuAction->hide();
+    ui->visuCont->hide();
+    ui->visuPrio->hide();
+    ui->editAction->hide();
+    ui->editTexte->hide();
+    ui->editPrio->hide();
+
     NOTES::Note& a = getNote(i->text());
-    ui->editTitre->setText(a.getTitle());
-    ui->editTexte->setText("Coucou !!!");
+  a.visualiser(ui);
+
+
     ui->visualisation->show();
 
 }
