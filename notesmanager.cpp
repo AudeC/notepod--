@@ -126,39 +126,20 @@ namespace NOTES {
         return *a;
     }
 
-
-
-
-    void NotesManager::save() const {
-        ofstream fout(filename.toLocal8Bit().constData());
-        for (Note* i : notes) {
-            fout << *i;
-        }
-        fout.close();
+    QTextStream& operator<<(QTextStream& flot, const TIME::Date& date) {
+        flot << date.getAnnee() << "-" << date.getMois() << "-" << date.getJour();
+        return flot;
     }
 
 
 
-    void NotesManager::load(const QString& f) {
-        if (filename != f) save();
-        filename = f;
-        ifstream fin(filename.toLocal8Bit().constData()); // open file
-        if (!fin) throw NotesException("error, file does not exist");
-        while (!fin.eof() && fin.good()) {
-            char tmp[1000];
-            fin.getline(tmp, 1000); // get id on the first line
-            if (fin.bad()) throw NotesException("error reading note id on file");
-            QString id = tmp;
-            fin.getline(tmp, 1000); // get title on the next line
-            if (fin.bad()) throw NotesException("error reading note title on file");
-            QString title = tmp;
-            Note* a = new Note(id, title);
-            addNote(a);
-            if (fin.peek() == '\r') fin.ignore();
-            if (fin.peek() == '\n') fin.ignore();
-        }
-        fin.close(); // close file
+
+    void NotesManager::save() {
+        db.save(notes);
     }
+
+ void NotesManager::load(){
+    db.load(this);
 
 }
 
@@ -182,3 +163,7 @@ ostream& operator<<(ostream& f, const NOTES::Relation& a) {
     f << "\n";
     return f;
 }
+
+}
+
+

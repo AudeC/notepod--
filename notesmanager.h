@@ -3,7 +3,7 @@
 
 #include "timing.h"
 #include "main.h"
-
+#include "databasemanager.h"
 
 namespace NOTES {
     class NotesException {
@@ -39,6 +39,7 @@ namespace NOTES {
         void archiver();
         virtual QString getClass() const { return "Note"; }
         virtual void visualiser(Ui::MainWindow * ui);
+
     };
 
     class Article : public Note
@@ -54,6 +55,7 @@ namespace NOTES {
         void setTexte(const QString& s) { texte = s;  }
         QString getClass() const { return "Article"; }
           virtual void visualiser(Ui::MainWindow * ui);
+
 
     };
     class Media : public Note
@@ -72,6 +74,8 @@ namespace NOTES {
         QString getClass() const { return "Media"; }
         Media(const QString& i, const QString& ti, enum Mediatype m, const QString& te) : Note(i, ti), texte(te), type(m) {}
          virtual  void visualiser(Ui::MainWindow * ui);
+
+
     };
     class Tache: public Note
     {
@@ -94,6 +98,9 @@ namespace NOTES {
         QString getClass() const { return "Tache"; }
          virtual  void visualiser(Ui::MainWindow * ui);
     };
+
+
+
     class Relation
     {
     public:
@@ -159,6 +166,7 @@ namespace NOTES {
         vector<Note*> notes;
         vector<Relation> relations;
         QString filename;
+        DatabaseManager db;
         static Handler handler;
 
         //NotesManager& operator=(const NotesManager& m);
@@ -180,6 +188,22 @@ namespace NOTES {
         {
             return handler;
         }
+
+        NotesManager(): db( DatabaseManager("notes.db")){
+
+                if (db.isOpen())
+                {
+                    db.createTable();   // Creates a table if it doens't exist. Otherwise, it will use existing table.
+
+                    qDebug() << "End";
+                }
+                else
+                {
+                    qDebug() << "Database is not open!";
+            }
+
+        }
+
         Note& getNewNote(const QString& id);
         Note& getNote(const QString& id);
         Article& getNewArticle(const QString& id);
@@ -188,13 +212,16 @@ namespace NOTES {
         Relation& getNewRelation(const QString& n, const QString& d = "", bool o = false);
         Relation& getRelation(const QString& n);
         vector<Note*> getNotes(){ return notes; }
-        void load(const QString& f);
-        void save() const;
+
+        void load();
+        void save();
         virtual ~NotesManager()
         {
+            db.save(notes);
             notes.clear();
             relations.clear();
             filename = "";
+
         }
 
         /*

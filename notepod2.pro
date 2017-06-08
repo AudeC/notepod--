@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,14 +28,18 @@ SOURCES += \
         mainwindow.cpp \
     notesmanager.cpp \
     timing.cpp \
-    ajout.cpp
+    ajout.cpp \
+    databasemanager.cpp
 
 HEADERS += \
         mainwindow.h \
     notesmanager.h \
     timing.h \
-    main.h
+    main.h \
+    databasemanager.h
 
 FORMS += \
         mainwindow.ui \
     ajout.ui
+
+DISTFILES +=

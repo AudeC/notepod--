@@ -13,10 +13,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuAjout->addAction(actionNouveau);
     connect(actionNouveau, SIGNAL(triggered()), fenAjout, SLOT(open()));
 
+    QAction *actionSave = new QAction("&Sauvegarder", this);
+    ui->menuSauvegarder->addAction(actionSave);
+    connect(actionSave, SIGNAL(triggered()), this, SLOT(saveSlot()));
+
+    load();
+
     // Test
-    addNote(new NOTES::Article("test1", "Je suis un test", "Mon beau texte"));
-    addNote(new NOTES::Media("media1", "Mediapart", son, "Notepod c'est trop bien"));
-   addNote(new NOTES::Tache("travailler", "BosserLO21", "Au boulot", 1));
+    //addNote(new NOTES::Article("wujah2", "Je suis un test", "Mon beau texte"));
+    //addNote(new NOTES::Media("woojoh", "Mediapart", son, "Notepod c'est trop bien"));
+   //addNote(new NOTES::Tache("hojjy", "BosserLO21", "Au boulot", 1));
 
 
     // Ajout des notes

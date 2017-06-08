@@ -3,7 +3,8 @@
 #include <QString>
 #include <iostream>
 #include <vector>
-
+#include <QDebug>
+#include <QSqlQuery>
 using namespace std;
 
 

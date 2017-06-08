@@ -24,7 +24,9 @@ public:
 
 public slots:
     void visualiserNote(QListWidgetItem * a);
-
+    void saveSlot(){
+        NotesManager::save();
+    }
 };
 
 
