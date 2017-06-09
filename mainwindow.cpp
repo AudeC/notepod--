@@ -19,10 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     load();
 
-    // Test
-    //addNote(new NOTES::Article("wujah2", "Je suis un test", "Mon beau texte"));
-    //addNote(new NOTES::Media("woojoh", "Mediapart", son, "Notepod c'est trop bien"));
-   //addNote(new NOTES::Tache("hojjy", "BosserLO21", "Au boulot", 1));
 
 
     // Ajout des notes
@@ -33,11 +29,38 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->listeNotes, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(visualiserNote(QListWidgetItem*)));
 
     ui->visualisation->hide();
+    connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()));
+
+    connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
+
+}
+
+void MainWindow::restaurerNote(QListWidgetItem * a ){
+    QString date = a->text();
+
+    for(NOTES::MementoNote * i : historique[noteOuverte->getId()]){
+        if(date == i->getModification().toString()){
+            qDebug() << "j'ai la note" << i->getTitle();
+            noteOuverte->SetMemento(i);
+            noteOuverte->visualiser(ui);
+            return;
+        } else {
+            qDebug() << "je supprime";
+           // historique[noteOuverte->getId()].pop_back();
+        }
+    }
 }
 
 void MainWindow::ajouterNote(NOTES::Note *a){
     addNote(a);
     ui->listeNotes->addItem(a->getId());
+}
+
+void MainWindow::sauvegarder(){
+    vector<NOTES::MementoNote*> * v = &historique[noteOuverte->getId()];
+    v->push_back(noteOuverte->creerMemento());
+    ui->anciennesVersions->addItem(noteOuverte->creerMemento()->getModification().toString());
+    noteOuverte->sauvegarder(ui);
 }
 
 void MainWindow::visualiserNote(QListWidgetItem * i){
@@ -51,9 +74,18 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
     ui->editPrio->hide();
 
     NOTES::Note& a = getNote(i->text());
-  a.visualiser(ui);
+    noteOuverte = &a;
 
+     a.visualiser(ui);
 
+     while(ui->anciennesVersions->count()>0)
+     {
+       ui->anciennesVersions->takeItem(0);//handle the item if you don't
+                               //have a pointer to it elsewhere
+     }
+     for(NOTES::MementoNote * i : historique[a.getId()] ){
+         ui->anciennesVersions->addItem(i->getModification().toString());
+     }
     ui->visualisation->show();
 
 }

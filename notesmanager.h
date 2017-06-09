@@ -4,6 +4,7 @@
 #include "timing.h"
 #include "main.h"
 #include "databasemanager.h"
+#include <map>
 
 namespace NOTES {
     class NotesException {
@@ -14,33 +15,55 @@ namespace NOTES {
         string info;
     };
 
+
+
+    class MementoNote {
+      QString title;
+      QDateTime modification;
+
+      public:
+        QString& getTitle(){ return title; }
+        QDateTime& getModification() { return modification; }
+        MementoNote(const Note& n);
+        MementoNote(const Note* n);
+    };
+
+
     class Note {
         QString id;
         QString title;
-        TIME::Date creation;
-        TIME::Date modification;
+        QDateTime creation;
+        QDateTime modification;
         bool actif;
         friend class NotesManager;
         friend class MainWindow;
-
-    protected:
-        //Note& operator=(const Note& a);
-        //Note(const Note& a);
     public:
-        Note(const QString& i, const QString& ti) : id(i), title(ti), creation(TIME::Date()), modification(TIME::Date()) {};
-
-    public:
-
+        Note(const QString& i, const QString& ti) : id(i), title(ti), creation(QDateTime::currentDateTime()), modification(QDateTime::currentDateTime()) {}
         QString getId() const { return id; }
         QString getTitle() const { return title; }
-        TIME::Date getCreation() const { return creation; }
-        TIME::Date getModification() const { return modification; }
+        QDateTime getCreation() const { return creation; }
+        QDateTime getModification() const { return modification; }
+        void setCreation(const QDateTime& c){ creation = c; }
+        void setModification(const QDateTime& c){ modification = c; }
+        void modifier(){ modification = QDateTime::currentDateTime();  }
         void setTitle(const QString& t);
         void archiver();
         virtual QString getClass() const { return "Note"; }
         virtual void visualiser(Ui::MainWindow * ui);
+        virtual void sauvegarder(Ui::MainWindow * ui);
+        virtual MementoNote* creerMemento() const;
+        virtual void SetMemento(MementoNote *m);
+    };
+
+    class MementoArticle : public MementoNote {
+        QString texte;
+    public:
+        QString& getTexte() { return texte; }
+        MementoArticle(const Article& n);
+        MementoArticle(const Article* n);
 
     };
+
 
     class Article : public Note
     {
@@ -50,54 +73,94 @@ namespace NOTES {
 
 
     public:
-         Article(const QString& i, const QString& ti, const QString& te) : Note(i, ti), texte(te) {}
+         Article(const QString& i, const QString& ti, const QString& te = "") : Note(i, ti), texte(te) {}
         QString getTexte() const { return texte; }
-        void setTexte(const QString& s) { texte = s;  }
+        void setTexte(const QString& s) { texte = s; modifier(); }
         QString getClass() const { return "Article"; }
           virtual void visualiser(Ui::MainWindow * ui);
-
+        virtual void sauvegarder(Ui::MainWindow * ui);
+        virtual MementoArticle* creerMemento() const;
+        virtual void SetMemento(MementoNote *m);
 
     };
+
+
+    class MementoMedia : public MementoNote {
+        QString texte;
+        enum Mediatype type;
+        QString fichier;
+    public:
+        QString& getTexte() { return texte; }
+        enum Mediatype& getType() { return type; }
+        QString& getFichier() { return fichier; }
+        MementoMedia(const Media& n);
+         MementoMedia(const Media* n);
+    };
+
     class Media : public Note
     {
 
         QString texte;
         enum Mediatype type;
+        QString fichier;
 
         friend class NotesManager;
         friend class MainWindow;
     public:
         QString getTexte() const { return texte; }
         enum Mediatype getType() const { return type; }
-        void setTexte(const QString& t) { texte = t;  }
-        void setType(enum Mediatype m) { type = m;  }
+        QString getFichier() const { return fichier; }
+        void setTexte(const QString& t) { texte = t; modifier(); }
+        void setType(enum Mediatype m) { type = m; modifier();  }
+        void setFichier(const QString& f) { fichier = f; modifier(); }
         QString getClass() const { return "Media"; }
-        Media(const QString& i, const QString& ti, enum Mediatype m, const QString& te) : Note(i, ti), texte(te), type(m) {}
+        Media(const QString& i, const QString& ti, enum Mediatype m = image, const QString& te = "") : Note(i, ti), texte(te), type(m) {}
          virtual  void visualiser(Ui::MainWindow * ui);
-
-
+        virtual void sauvegarder(Ui::MainWindow * ui);
+         virtual MementoMedia* creerMemento() const;
+        virtual void SetMemento(MementoMedia* m);
     };
+
+
+    class MementoTache : public MementoNote {
+        QString action;
+        int priorite;
+        QDateTime echeance;
+    public:
+        QString& getAction() { return action; }
+        int getPriorite() const{ return priorite; }
+        QDateTime getEcheance() const { return echeance; }
+        MementoTache(const Tache& n);
+        MementoTache(const Tache* n);
+    };
+
     class Tache: public Note
     {
 
         QString action;
         int priorite;
-        TIME::Date echeance;
+        QDateTime echeance;
 
         friend class NotesManager;
         friend class MainWindow;
     public:
-        Tache(const QString& i, const QString& ti, const QString& a, int p = 0, TIME::Date e = TIME::Date()):
+        Tache(const QString& i, const QString& ti, const QString& a = "", int p = 0, QDateTime e = QDateTime()):
             Note(i ,ti), action(a), priorite(p), echeance(e){}
         QString getAction() const{ return action; }
         int getPriorite() const{ return priorite; }
-        TIME::Date getEcheance() const { return echeance; }
-        void setAction(const QString& s) { action = s;  }
-        void setPriorite(int i) { priorite = i; }
-        void setEcheance(TIME::Date d) { echeance = d;  }
+        QDateTime getEcheance() const { return echeance; }
+        void setAction(const QString& s) { action = s; modifier();  }
+        void setPriorite(int i) { priorite = i;  modifier(); }
+        void setEcheance(QDateTime d) { echeance = d;    modifier();}
         QString getClass() const { return "Tache"; }
          virtual  void visualiser(Ui::MainWindow * ui);
+        virtual void sauvegarder(Ui::MainWindow * ui);
+         virtual MementoTache* creerMemento() const;
+        virtual void SetMemento(MementoTache* m);
     };
+
+
+
 
 
 
@@ -162,12 +225,19 @@ namespace NOTES {
 
         };
 
-    private:
+    protected:
         vector<Note*> notes;
         vector<Relation> relations;
+        map<QString, vector<MementoNote*>> historique; // tableau associatif de vecteurs de Memento
+
         QString filename;
         DatabaseManager db;
+
+        void addRelation(Relation* r);
+
+
         static Handler handler;
+
 
         //NotesManager& operator=(const NotesManager& m);
         //NotesManager(): filename("notes.json"){}
@@ -176,8 +246,6 @@ namespace NOTES {
         friend struct Handler;
     public:
         void addNote(Note* a);
-    private:
-        void addRelation(Relation* r);
 
     public:
         static NotesManager& getInstance();
@@ -224,94 +292,6 @@ namespace NOTES {
 
         }
 
-        /*
-        class iterator {
-            int ptr;
-            int max;
-            Note** notes;
-            iterator(Note** a, int m, int c = 0) {
-                notes = a;
-                ptr = c;
-                max = m;
-            }
-            friend class NotesManager;
-        public:
-            void operator++() {
-                if (ptr < max) ptr++;
-                else throw NotesException("iterateur fini");
-            }
-            Note& operator*() const {
-                return *notes[ptr];
-            }
-            bool operator!=(const iterator a) const {
-                return notes != a.notes || ptr != a.ptr;
-            }
-
-        };
-        NotesManager::iterator begin() const { return NotesManager::iterator(notes, nbNotes); }
-        NotesManager::iterator end() const { return NotesManager::iterator(notes, nbNotes, nbNotes); }
-
-        class ConstIterator {
-            int ptr;
-            int max;
-            Note** articles;
-            friend class NotesManager;
-            ConstIterator(Note** a, int m) {
-                articles = a;
-                ptr = 0;
-                max = m;
-            }
-        public:
-            int isDone() const {
-                if (ptr == max)
-                    return 1;
-            }
-            void next() {
-                if (ptr < max) ptr++;
-                else throw NotesException("iterateur fini");
-            }
-            const Note& current() const {
-                return *articles[ptr];
-            }
-        };
-
-
-        ConstIterator getIterator() const { return ConstIterator(notes, nbNotes); }
-        ConstIterator getConstIterator() const { return ConstIterator(notes, nbNotes); }
-
-        class SearchIterator {
-            int ptr;
-            int max;
-            QString search;
-            Note** notes;
-            friend class NotesManager;
-            SearchIterator(Note** a, int m, const QString& se = "") {
-                notes = a;
-                ptr = 0;
-                max = m;
-                search = se;
-                do {
-                    ptr++;
-                } while (ptr < max && notes[ptr]->getTitle().find(search) == QString::npos);
-            }
-        public:
-            bool isDone() const {
-                return ptr == max;
-            }
-            void next() {
-                if (ptr < max) {
-                    do {
-                        ptr++;
-                    } while (ptr < max && notes[ptr]->getTitle().find(search) == QString::npos);
-                }
-                else throw NotesException("iterateur fini");
-            }
-            Note& current() const {
-                return *notes[ptr];
-            }
-        };
-        SearchIterator getSearchIterator(const QString& txt) const { return SearchIterator(notes, nbNotes, txt); }
-        */
 
     };
 

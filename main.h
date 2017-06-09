@@ -5,6 +5,7 @@
 #include <vector>
 #include <QDebug>
 #include <QSqlQuery>
+#include <QDateTime>
 using namespace std;
 
 
@@ -27,6 +28,11 @@ namespace NOTES {
     class Media;
     class Tache;
     class Relation;
-}
 
+   class MementoNote;
+   class MementoMedia;
+   class MementoArticle;
+   class MementoTache;
+
+}
 #endif // MAIN_H

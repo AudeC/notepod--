@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QListWidgetItem>
+
 #include "main.h"
 #include "notesmanager.h"
 
@@ -15,6 +16,7 @@ class MainWindow : public QMainWindow, private NOTES::NotesManager
 private:
     Ui::MainWindow *ui;
     Ajout* fenAjout;
+    NOTES::Note* noteOuverte;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -24,6 +26,8 @@ public:
 
 public slots:
     void visualiserNote(QListWidgetItem * a);
+    void restaurerNote(QListWidgetItem * a);
+    void sauvegarder();
     void saveSlot(){
         NotesManager::save();
     }

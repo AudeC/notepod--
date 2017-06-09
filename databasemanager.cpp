@@ -47,7 +47,7 @@ void DatabaseManager::insert(NOTES::Tache * n){
       s.bindValue(":type", "Tache");
       s.bindValue(":text", n->getAction());
 
-      if(s.exec()) qDebug() << "sa marche";
+      if(s.exec()) qDebug() << "insertion tache";
       else qDebug() << s.lastError();
 }
 
@@ -59,7 +59,7 @@ void DatabaseManager::insert(NOTES::Media * n){
   s.bindValue(":type", "Media");
   s.bindValue(":text", n->getTexte());
   s.bindValue(":media", n->getType());
-  if(s.exec()) qDebug() << "sa marche";
+  if(s.exec()) qDebug() << "insertion media";
   else qDebug() << s.lastError();
 }
 
@@ -71,12 +71,23 @@ void DatabaseManager::insert(NOTES::Article * n){
       s.bindValue(":type", "Article");
       s.bindValue(":text", n->getTexte());
 
-      if(s.exec()) qDebug() << "sa marche";
+      if(s.exec()) qDebug() << "insertion article";
       else qDebug() << s.lastError();
 
 }
 
+
+
 void DatabaseManager::insert(NOTES::Note * n){
+      if(n->getClass() == "Article"){
+           return insert((NOTES::Article*) n);
+      } else if(n->getClass() == "Tache"){
+          return insert((NOTES::Tache*) n);
+     }if(n->getClass() == "Media"){
+          return insert((NOTES::Media*) n);
+
+     }
+
       QSqlQuery s;
       s.prepare("INSERT INTO notes(id, titre, type) VALUES(:id, :titre, :type)");
       s.bindValue(":id", n->getId());
@@ -84,9 +95,10 @@ void DatabaseManager::insert(NOTES::Note * n){
       s.bindValue(":type", QString("Note"));
 
 
-     if(s.exec()) qDebug() << "sa marche";
+     if(s.exec()) qDebug() << "insertion note";
      else qDebug() << s.lastError();
 }
+
 
 
 

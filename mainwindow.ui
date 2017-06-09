@@ -29,7 +29,7 @@
       <x>0</x>
       <y>0</y>
       <width>451</width>
-      <height>361</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="palette">
@@ -458,43 +458,60 @@
      </property>
      <layout class="QFormLayout" name="formLayout_2">
       <item row="1" column="0">
+       <widget class="QLabel" name="visuId">
+        <property name="text">
+         <string>Identifiant</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="editId">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="visuTitre">
         <property name="text">
          <string>Titre :</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QLineEdit" name="editTitre"/>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="visuCont">
         <property name="text">
          <string>Contenu :</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2">
+      <item row="5" column="0" colspan="2">
        <widget class="QTextEdit" name="editTexte"/>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="visuAction">
         <property name="text">
          <string>Action</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="QLineEdit" name="editAction"/>
       </item>
-      <item row="6" column="0">
+      <item row="7" column="0">
        <widget class="QLabel" name="visuPrio">
         <property name="text">
          <string>Priorité</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
+      <item row="7" column="1">
        <widget class="QComboBox" name="editPrio">
         <item>
          <property name="text">
@@ -523,21 +540,53 @@
         </item>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="8" column="0">
        <widget class="QPushButton" name="btnSuppr">
         <property name="text">
          <string>Supprimer</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="8" column="1">
        <widget class="QPushButton" name="btnSauver">
         <property name="text">
          <string>Sauvegarder</string>
         </property>
        </widget>
       </item>
+      <item row="9" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Historique</string>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="historique" native="true">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>131</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <widget class="QListWidget" name="anciennesVersions">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>0</y>
+       <width>261</width>
+       <height>401</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Historique</string>
+      </property>
+     </item>
     </widget>
    </widget>
   </widget>
