@@ -14,10 +14,12 @@ enum Mediatype { image, son, video };
 namespace Ui {
 class MainWindow;
 class Ajout;
+class Relations;
 }
 
 class MainWindow;
 class Ajout;
+class Relations;
 
 namespace NOTES {
     class NotesException;

@@ -578,7 +578,7 @@
       <rect>
        <x>5</x>
        <y>0</y>
-       <width>261</width>
+       <width>131</width>
        <height>401</height>
       </rect>
      </property>
@@ -646,6 +646,28 @@
        <height>192</height>
       </rect>
      </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockRelations">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>160</width>
+       <height>401</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QListWidget" name="listeRelations"/>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>

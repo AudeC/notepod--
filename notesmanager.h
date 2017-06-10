@@ -1,7 +1,6 @@
 #if !defined(_NOTES_H)
 #define _NOTES_H
 
-#include "timing.h"
 #include "main.h"
 #include "databasemanager.h"
 #include <map>
@@ -84,7 +83,6 @@ namespace NOTES {
 
     };
 
-
     class MementoMedia : public MementoNote {
         QString texte;
         enum Mediatype type;
@@ -114,11 +112,12 @@ namespace NOTES {
         void setType(enum Mediatype m) { type = m; modifier();  }
         void setFichier(const QString& f) { fichier = f; modifier(); }
         QString getClass() const { return "Media"; }
-        Media(const QString& i, const QString& ti, enum Mediatype m = image, const QString& te = "") : Note(i, ti), texte(te), type(m) {}
-         virtual  void visualiser(Ui::MainWindow * ui);
+        Media(const QString& i, const QString& ti, enum Mediatype m = image, const QString& te = "", const QString& fi = "") : Note(i, ti), texte(te), type(m), fichier(fi) {}
+        Media(const QString& i, const QString& ti, const QString& m, const QString& te, const QString& fi);
+        virtual  void visualiser(Ui::MainWindow * ui);
         virtual void sauvegarder(Ui::MainWindow * ui);
          virtual MementoMedia* creerMemento() const;
-        virtual void SetMemento(MementoMedia* m);
+        virtual void SetMemento(MementoNote* m);
     };
 
 
@@ -156,7 +155,7 @@ namespace NOTES {
          virtual  void visualiser(Ui::MainWindow * ui);
         virtual void sauvegarder(Ui::MainWindow * ui);
          virtual MementoTache* creerMemento() const;
-        virtual void SetMemento(MementoTache* m);
+        virtual void SetMemento(MementoNote* m);
     };
 
 
@@ -187,17 +186,18 @@ namespace NOTES {
         };
 
     private:
-        Relation(const QString& t, const QString& d, bool o = false) : titre(t), description(d), oriente(o) {}
+
         QString titre;
         QString description;
         bool oriente;
         vector<Couple> couples;
-        friend class NotesManager;
     public:
+        Relation(const QString& t, const QString& d, bool o = false) : titre(t), description(d), oriente(o) {}
 
         QString getTitre() const { return titre; }
         QString getDescription() const { return description; }
         vector<Couple> getCouples() const { return couples; }
+        bool getOrientation() { return oriente; }
 
         void ajouterCouple(Note* m1, Note* m2, const QString& la = "")
         {
@@ -233,7 +233,6 @@ namespace NOTES {
         QString filename;
         DatabaseManager db;
 
-        void addRelation(Relation* r);
 
 
         static Handler handler;
@@ -246,8 +245,8 @@ namespace NOTES {
         friend struct Handler;
     public:
         void addNote(Note* a);
+        void addRelation(Relation* r);
 
-    public:
         static NotesManager& getInstance();
         // donne le seul NotesManager du programme
         static void freeInstance(); // le supprime

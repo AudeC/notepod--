@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow, private NOTES::NotesManager
 private:
     Ui::MainWindow *ui;
     Ajout* fenAjout;
+    Relations* fenRel;
     NOTES::Note* noteOuverte;
 
 public:
@@ -23,7 +24,7 @@ public:
     ~MainWindow();
     void ajouterNote(NOTES::Note *a);
     void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
-
+    using NotesManager::getRelation;
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
@@ -50,5 +51,21 @@ public slots :
     void accepter();
 };
 
+class Relations : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit Relations(QWidget *parent = 0);
+    ~Relations();
+
+private:
+    Ui::Relations *ui;
+    MainWindow* m;
+
+
+public slots :
+    void editerRel(QListWidgetItem *);
+};
 
 #endif // MAINWINDOW_H

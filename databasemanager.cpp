@@ -131,6 +131,10 @@ void DatabaseManager::load(NOTES::NotesManager* m){
             QString ty = query.value(2).toString();
             if(ty == "Article"){
                 m->addNote(new NOTES::Article(i, ti, query.value(3).toString()));
+            } else if(ty == "Tache"){
+                m->addNote(new NOTES::Tache(i, ti, query.value(3).toString(), query.value(4).toInt(), query.value(5).toDateTime()));
+            } else if(ty == "Media"){
+                 m->addNote(new NOTES::Media(i, ti, query.value(7).toString(), query.value(3).toString(), query.value(6).toString()));
             } else if(ty == "Note"){
                  m->addNote(new NOTES::Note(i, ti));
             }

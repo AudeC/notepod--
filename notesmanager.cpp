@@ -5,12 +5,17 @@
 #include <fstream>
 string qtostd(QString o){
     return o.toLocal8Bit().constData();
-                        }
+}
 
 
-using namespace TIME;
 
 namespace NOTES {
+
+     enum Mediatype toMedia(const QString& q){
+        if(q.toLower() == "image") return image;
+        if(q.toLower() == "son") return son;
+        return video;
+    }
 
     /*
      * Note
@@ -60,17 +65,18 @@ namespace NOTES {
        * Media
        */
 
+    Media::Media(const QString& i, const QString& ti, const QString& m, const QString& te = "", const QString& fi = "") : Note(i, ti), texte(te), type(toMedia(m)), fichier(fi) {}
+
     void Media::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
     }
 
-    void Media::SetMemento(MementoNote *m)
-           {
-               Note::SetMemento(m);
-               texte = ((MementoMedia*) m)->getTexte();
-               type = ((MementoMedia*) m)->getType();
-               fichier = ((MementoArticle*) m)->getFichier();
-           }
+    void Media::SetMemento(MementoNote *m){
+       Note::SetMemento(m);
+       texte = ((MementoMedia*) m)->getTexte();
+       type = ((MementoMedia*) m)->getType();
+       fichier = ((MementoMedia*) m)->getFichier();
+   }
 
       MementoMedia* Media::creerMemento() const { return new MementoMedia(this); }
 

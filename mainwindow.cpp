@@ -4,7 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-     fenAjout(new Ajout(this))
+     fenAjout(new Ajout(this)),
+     fenRel(new Relations(this))
 {
     ui->setupUi(this);
 
@@ -33,9 +34,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
 
+    addRelation(new NOTES::Relation("test", "descri"));
+    getRelation("test").ajouterCouple(new NOTES::Note("coucou", "yolo"), new NOTES::Note("fleur", "hihihi"), "hey !");
+    addRelation(new NOTES::Relation("test2", "descri2"));
+
+    // Ajout des relations
+    for(NOTES::Relation r : relations)
+    {
+        ui->listeRelations->addItem(r.getTitre());
+    }
+    connect(ui->listeRelations, SIGNAL(itemDoubleClicked(QListWidgetItem*)), fenRel, SLOT(editerRel(QListWidgetItem*)));
+
 }
 
 void MainWindow::restaurerNote(QListWidgetItem * a ){
+
     QString date = a->text();
 
     for(NOTES::MementoNote * i : historique[noteOuverte->getId()]){
@@ -57,6 +70,7 @@ void MainWindow::ajouterNote(NOTES::Note *a){
 }
 
 void MainWindow::sauvegarder(){
+
     vector<NOTES::MementoNote*> * v = &historique[noteOuverte->getId()];
     v->push_back(noteOuverte->creerMemento());
     ui->anciennesVersions->addItem(noteOuverte->creerMemento()->getModification().toString());
