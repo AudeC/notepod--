@@ -5,36 +5,89 @@
 #include <fstream>
 string qtostd(QString o){
     return o.toLocal8Bit().constData();
-                        }
+}
 
 
-using namespace TIME;
 
 namespace NOTES {
-    void Note::setTitle(const QString& t) {
-        title = t;
+
+     enum Mediatype toMedia(const QString& q){
+        if(q.toLower() == "image") return image;
+        if(q.toLower() == "son") return son;
+        return video;
     }
 
-    void Note::archiver()
+    /*
+     * Note
+     */
+    void Note::setTitle(const QString& t) {title = t;}
+
+    void Note::archiver(){actif = false; }
+
+    void Note::visualiser(Ui::MainWindow * ui){ ui->editTitre->setText(title);}
+
+    void Note::SetMemento(MementoNote* m)
     {
-        actif = false;
+        title = m->getTitle();
+        modification = m->getModification();
+
     }
 
-    void Note::visualiser(Ui::MainWindow * ui){
-        ui->editTitre->setText(title);
+    MementoNote* Note::creerMemento() const { return new MementoNote(this); }
+    MementoNote::MementoNote(const Note& n): title(n.getTitle()), modification(n.getModification()){}
+    MementoNote::MementoNote(const Note* n): title(n->getTitle()), modification(n->getModification()){}
+
+    /*
+     * Articles
+     */
+
+    void Article::SetMemento(MementoNote *m)
+    {
+        Note::SetMemento(m);
+        texte = ((MementoArticle*) m)->getTexte();
     }
 
     void Article::visualiser(Ui::MainWindow * ui){
-        ui->editTitre->setText("getTitle()");
+        ui->editTitre->setText(getTitle());
         ui->editTexte->setText(texte);
          ui->visuCont->show();
           ui->editTexte->show();
+
     }
+
+      MementoArticle* Article::creerMemento() const {
+          return new MementoArticle(this); }
+
+      MementoArticle::MementoArticle(const Article& n): MementoNote(n), texte(n.getTexte()){}
+      MementoArticle::MementoArticle(const Article* n): MementoNote(n), texte(n->getTexte()){}
+
+      /*
+       * Media
+       */
+
+    Media::Media(const QString& i, const QString& ti, const QString& m, const QString& te = "", const QString& fi = "") : Note(i, ti), texte(te), type(toMedia(m)), fichier(fi) {}
 
     void Media::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
     }
 
+    void Media::SetMemento(MementoNote *m){
+       Note::SetMemento(m);
+       texte = ((MementoMedia*) m)->getTexte();
+       type = ((MementoMedia*) m)->getType();
+       fichier = ((MementoMedia*) m)->getFichier();
+   }
+
+      MementoMedia* Media::creerMemento() const { return new MementoMedia(this); }
+
+      MementoMedia::MementoMedia(const Media& n): MementoNote(n), texte(n.getTexte()), type(n.getType()), fichier(n.getFichier()){}
+      MementoMedia::MementoMedia(const Media* n): MementoNote(n), texte(n->getTexte()), type(n->getType()), fichier(n->getFichier()){}
+
+
+
+      /*
+       * Taches
+       */
     void Tache::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
         ui->editAction->show();
@@ -42,6 +95,50 @@ namespace NOTES {
         ui->editPrio->show();
         ui->visuPrio->show();
     }
+
+    void Tache::SetMemento(MementoNote* m)
+            {
+                Note::SetMemento(m);
+                action = ((MementoTache*) m)->getAction();
+                priorite = ((MementoTache*) m)->getPriorite();
+                echeance = ((MementoTache*) m)->getEcheance();
+            }
+
+      MementoTache* Tache::creerMemento() const { return new MementoTache(this); }
+      MementoTache::MementoTache(const Tache& n): MementoNote(n), action(n.getAction()), priorite(n.getPriorite()), echeance(n.getEcheance()){}
+      MementoTache::MementoTache(const Tache* n): MementoNote(n), action(n->getAction()), priorite(n->getPriorite()), echeance(n->getEcheance()){}
+
+
+    void Note::sauvegarder(Ui::MainWindow * ui){
+        setTitle(ui->editTitre->text());
+    }
+
+    void Article::sauvegarder(Ui::MainWindow * ui){
+        Note::sauvegarder(ui);
+        setTexte(ui->editTexte->toPlainText());
+    }
+
+    // TODO : Rajouter dans l'UI de quoi changer le fichier et l'échéance
+
+    void Media::sauvegarder(Ui::MainWindow * ui){
+        Note::sauvegarder(ui);
+        setTexte(ui->editTexte->toPlainText());
+        //setFichier(ui->editFichier->text());
+    }
+
+    void Tache::sauvegarder(Ui::MainWindow * ui){
+        Note::sauvegarder(ui);
+        setAction(ui->editAction->text());
+        setPriorite(ui->editPrio->currentText().toInt());
+        //setEcheance(ui->editEcheance->);
+    }
+
+
+
+    /*
+     * NotesManager
+     */
+
 
     //NotesManager* NotesManager::instanceUnique= nullptr;
     NotesManager::Handler NotesManager::handler = NotesManager::Handler();
@@ -66,7 +163,7 @@ namespace NOTES {
             if (i->getId() == a->getId()) throw NotesException("error, creation of an already existent note");
         }
         notes.push_back(a);
-        std::cout<< "Nouvelle note insérée avec succès";
+        qDebug() << "Nouvelle note insérée avec succès";
 
     }
 
@@ -110,28 +207,6 @@ namespace NOTES {
         addNote(a);
         return *a;
     }
-    Article& NotesManager::getNewArticle(const QString& id) {
-        Article* a = new Article(id, "", "");
-        addNote(a);
-        return *a;
-    }
-    Tache& NotesManager::getNewTache(const QString& id) {
-        Tache* a = new Tache(id, "", "");
-        addNote(a);
-        return *a;
-    }
-    Media& NotesManager::getNewMedia(const QString& id, enum Mediatype m) {
-        Media* a = new Media(id, "", m, "");
-        addNote(a);
-        return *a;
-    }
-
-    QTextStream& operator<<(QTextStream& flot, const TIME::Date& date) {
-        flot << date.getAnnee() << "-" << date.getMois() << "-" << date.getJour();
-        return flot;
-    }
-
-
 
 
     void NotesManager::save() {

@@ -27,19 +27,19 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     notesmanager.cpp \
-    timing.cpp \
     ajout.cpp \
-    databasemanager.cpp
+    databasemanager.cpp \
+    relations.cpp
 
 HEADERS += \
         mainwindow.h \
     notesmanager.h \
-    timing.h \
     main.h \
     databasemanager.h
 
 FORMS += \
         mainwindow.ui \
-    ajout.ui
+    ajout.ui \
+    relations.ui
 
 DISTFILES +=

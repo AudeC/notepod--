@@ -19,11 +19,20 @@ void Ajout::accepter(){
   std::cout << "Connexion établie \n " ;
 
     try{
-    m->ajouterNote(new NOTES::Note(ui->editId->text(), ui->editTitre->text()));
-    ui->editId->clear();
-    ui->editTitre->clear();
+      QString classe = ui->editType->currentText();
+      if(classe == "Article"){
+             m->ajouterNote(new NOTES::Article(ui->editId->text(), ui->editTitre->text()));
+      }else if(classe == "Media"){
+             m->ajouterNote(new NOTES::Media(ui->editId->text(), ui->editTitre->text()));
+      }else if(classe == "Tache"){
+             m->ajouterNote(new NOTES::Tache(ui->editId->text(), ui->editTitre->text()));
+      } else m->ajouterNote(new NOTES::Note(ui->editId->text(), ui->editTitre->text()));
+
+
+        ui->editId->clear();
+        ui->editTitre->clear();
     } catch(NOTES::NotesException &e){
-       std::cout << "Erreur ! " << e.getInfo();
+       qDebug() << "Erreur ! ";
     }
 
 }
