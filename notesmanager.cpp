@@ -24,7 +24,7 @@ namespace NOTES {
 
     void Note::archiver(){actif = false; }
 
-    void Note::visualiser(Ui::MainWindow * ui){ ui->editTitre->setText(title);}
+    void Note::visualiser(Ui::MainWindow * ui){ui->editTitre->setText(title);}
 
     void Note::SetMemento(MementoNote* m)
     {
@@ -69,6 +69,9 @@ namespace NOTES {
 
     void Media::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
+        ui->visuMedia->show();
+        ui->btnParcourir->show();
+        ui->editMedia->show();
     }
 
     void Media::SetMemento(MementoNote *m){
@@ -92,8 +95,12 @@ namespace NOTES {
         ui->editTitre->setText(getTitle());
         ui->editAction->show();
         ui->editAction->setText(action);
-        ui->editPrio->show();
+        ui->editStatut->show();
+        ui->visuEcheance->show();
         ui->visuPrio->show();
+        ui->visuAction->show();
+        ui->visuStatut->show();
+
     }
 
     void Tache::SetMemento(MementoNote* m)

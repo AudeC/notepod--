@@ -9,14 +9,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Menu - Ajout d'une note
-    QAction *actionNouveau = new QAction("&Ajouter note", this);
-    ui->menuAjout->addAction(actionNouveau);
-    connect(actionNouveau, SIGNAL(triggered()), fenAjout, SLOT(open()));
+    // Barre de menu
 
-    QAction *actionSave = new QAction("&Sauvegarder", this);
-    ui->menuSauvegarder->addAction(actionSave);
-    connect(actionSave, SIGNAL(triggered()), this, SLOT(saveSlot()));
+    connect(ui->actionNvlleNote_2, SIGNAL(triggered()), fenAjout, SLOT(open()));
+    connect(ui->actionSauvegarder, SIGNAL(triggered()), this, SLOT(saveSlot()));
+    ui->menuAffichage->addAction(ui->dockRelations_2->toggleViewAction());
+
+    QAction *actionDenis = new QAction("&Denis", this);
+    ui->menuSauvegarder->addAction(actionDenis);
+    //connect(actionDenis, SIGNAL(triggered()), ah, SLOT(open()));
+
+    connect(ui->btnAjouter, SIGNAL(clicked()), fenAjout, SLOT(open()));
 
     load();
 
@@ -31,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->visualisation->hide();
     connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()));
+    connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(saveSlot()));
+    ui->historique->hide();
+    connect(ui->btnHistorique, SIGNAL(clicked(bool)), ui->historique, SLOT(show()));
 
     connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
 
@@ -69,6 +75,18 @@ void MainWindow::ajouterNote(NOTES::Note *a){
     ui->listeNotes->addItem(a->getId());
 }
 
+/*void MainWindow::chercherFichier()
+{
+    fichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"),
+                                                    QDir::toNativeSeparators(QDir::currentPath()),
+                                                    tr("Images (*.png *.gif *.jpg);;"
+                                                       "Fichiers audio (*.mp3 *.wav *.wma);;"
+                                                       "Fichiers vidéo (*.mp4 *.avi *.wmv)"));
+
+    if (!fichier.isNull())
+        ui->editMedia->setText(QDir::toNativeSeparators(fichier));
+}*/
+
 void MainWindow::sauvegarder(){
 
     vector<NOTES::MementoNote*> * v = &historique[noteOuverte->getId()];
@@ -83,23 +101,34 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
     ui->visuAction->hide();
     ui->visuCont->hide();
     ui->visuPrio->hide();
+    ui->visuEcheance->hide();
+    ui->visuStatut->hide();
     ui->editAction->hide();
     ui->editTexte->hide();
     ui->editPrio->hide();
+    ui->editEcheance->hide();
+    ui->editStatut->hide();
+    ui->visuMedia->hide();
+    ui->btnParcourir->hide();
+    ui->editMedia->hide();
+
+    connect(ui->visuEcheance, SIGNAL(toggled(bool)), ui->editEcheance, SLOT(setVisible(bool)));
+    connect(ui->visuPrio, SIGNAL(toggled(bool)), ui->editPrio, SLOT(setVisible(bool)));
 
     NOTES::Note& a = getNote(i->text());
     noteOuverte = &a;
 
-     a.visualiser(ui);
+    a.visualiser(ui);
 
-     while(ui->anciennesVersions->count()>0)
-     {
-       ui->anciennesVersions->takeItem(0);//handle the item if you don't
+    while(ui->anciennesVersions->count()>0)
+    {
+      ui->anciennesVersions->takeItem(0);//handle the item if you don't
                                //have a pointer to it elsewhere
-     }
-     for(NOTES::MementoNote * i : historique[a.getId()] ){
-         ui->anciennesVersions->addItem(i->getModification().toString());
-     }
+    }
+    for(NOTES::MementoNote * i : historique[a.getId()] ){
+        ui->anciennesVersions->addItem(i->getModification().toString());
+    }
+    ui->editId->setText(a.getId());
     ui->visualisation->show();
 
 }

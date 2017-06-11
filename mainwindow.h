@@ -18,6 +18,7 @@ private:
     Ajout* fenAjout;
     Relations* fenRel;
     NOTES::Note* noteOuverte;
+    QString fichier;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -28,6 +29,7 @@ public:
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
+    //void chercherFichier();
     void sauvegarder();
     void saveSlot(){
         NotesManager::save();
@@ -67,5 +69,7 @@ private:
 public slots :
     void editerRel(QListWidgetItem *);
 };
+
+
 
 #endif // MAINWINDOW_H
