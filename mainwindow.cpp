@@ -4,8 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-     fenAjout(new Ajout(this)),
-     fenRel(new Relations(this))
+    fenAjout(new Ajout(this)),
+    fenRel(new Relations(this))
 {
     ui->setupUi(this);
 
@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QAction *actionDenis = new QAction("&Denis", this);
     ui->menuSauvegarder->addAction(actionDenis);
-    //connect(actionDenis, SIGNAL(triggered()), ah, SLOT(open()));
+    connect(actionDenis, SIGNAL(triggered()), this, SLOT(ouvrirDenis()));
 
     connect(ui->btnAjouter, SIGNAL(clicked()), fenAjout, SLOT(open()));
 
@@ -36,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()));
     connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(saveSlot()));
     ui->historique->hide();
-    connect(ui->btnHistorique, SIGNAL(clicked(bool)), ui->historique, SLOT(show()));
+    ui->btnHistorique->setCheckable(true);
+    connect(ui->btnHistorique, SIGNAL(toggled(bool)), ui->historique, SLOT(setVisible(bool)));
 
     connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
 
@@ -75,9 +76,22 @@ void MainWindow::ajouterNote(NOTES::Note *a){
     ui->listeNotes->addItem(a->getId());
 }
 
-/*void MainWindow::chercherFichier()
+void MainWindow::ouvrirDenis()
 {
-    fichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"),
+    QMessageBox* ah = new QMessageBox;
+    ah->setWindowTitle("Ah!");
+    ah->setText("Ça veut dire que...?");
+    ah->setStandardButtons(QMessageBox::Ok);
+    ah->setDefaultButton(QMessageBox::Ok);
+    QPixmap icon("C:/Users/SilverEye/notepod/denis.brogniart.ah.png");
+    ah->setIconPixmap(icon);
+    ah->setWindowIcon(QIcon("C:/Users/SilverEye/notepod/1495391974_cancel_16.png"));
+    ah->show();
+}
+
+void MainWindow::chercherFichier()
+{
+    QString fichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"),
                                                     QDir::toNativeSeparators(QDir::currentPath()),
                                                     tr("Images (*.png *.gif *.jpg);;"
                                                        "Fichiers audio (*.mp3 *.wav *.wma);;"
@@ -85,7 +99,7 @@ void MainWindow::ajouterNote(NOTES::Note *a){
 
     if (!fichier.isNull())
         ui->editMedia->setText(QDir::toNativeSeparators(fichier));
-}*/
+}
 
 void MainWindow::sauvegarder(){
 
@@ -114,6 +128,7 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
 
     connect(ui->visuEcheance, SIGNAL(toggled(bool)), ui->editEcheance, SLOT(setVisible(bool)));
     connect(ui->visuPrio, SIGNAL(toggled(bool)), ui->editPrio, SLOT(setVisible(bool)));
+    connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
 
     NOTES::Note& a = getNote(i->text());
     noteOuverte = &a;

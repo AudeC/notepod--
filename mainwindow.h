@@ -5,6 +5,9 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QFileDialog>
 
 #include "main.h"
 #include "notesmanager.h"
@@ -29,7 +32,8 @@ public:
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
-    //void chercherFichier();
+    void chercherFichier();
+    void ouvrirDenis();
     void sauvegarder();
     void saveSlot(){
         NotesManager::save();
@@ -69,6 +73,8 @@ private:
 public slots :
     void editerRel(QListWidgetItem *);
 };
+
+
 
 
 
