@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     fenRel(new Relations(this))
 {
     ui->setupUi(this);
+    setWindowTitle("Notepod-- v0.1");
 
     // Barre de menu
 
@@ -89,6 +90,16 @@ void MainWindow::ouvrirDenis()
     ah->show();
 }
 
+void MainWindow::affEcheance(bool b)
+{
+    if (b==true) ui->editEcheance->show();
+    else
+    {
+        ui->editEcheance->hide();
+        //(NOTES::Tache)noteOuverte->setEcheance(QDateTime());
+    }
+}
+
 void MainWindow::chercherFichier()
 {
     QString fichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"),
@@ -126,7 +137,12 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
     ui->btnParcourir->hide();
     ui->editMedia->hide();
 
-    connect(ui->visuEcheance, SIGNAL(toggled(bool)), ui->editEcheance, SLOT(setVisible(bool)));
+    foreach(QCheckBox* box, this->findChildren<QCheckBox*>())
+            {
+                box->setChecked(false);
+            }
+
+    connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
     connect(ui->visuPrio, SIGNAL(toggled(bool)), ui->editPrio, SLOT(setVisible(bool)));
     connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
 

@@ -15,7 +15,7 @@ namespace NOTES {
         if(q.toLower() == "image") return image;
         if(q.toLower() == "son") return son;
         return video;
-    }
+     }
 
     /*
      * Note
@@ -50,8 +50,8 @@ namespace NOTES {
     void Article::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
         ui->editTexte->setText(texte);
-         ui->visuCont->show();
-          ui->editTexte->show();
+        ui->visuCont->show();
+        ui->editTexte->show();
 
     }
 
@@ -69,6 +69,7 @@ namespace NOTES {
 
     void Media::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
+        ui->editMedia->setText(getFichier());
         ui->visuMedia->show();
         ui->btnParcourir->show();
         ui->editMedia->show();
@@ -91,15 +92,21 @@ namespace NOTES {
       /*
        * Taches
        */
-    void Tache::visualiser(Ui::MainWindow * ui){
+
+      void Tache::visualiser(Ui::MainWindow * ui){
         ui->editTitre->setText(getTitle());
         ui->editAction->show();
         ui->editAction->setText(action);
         ui->editStatut->show();
+        ui->editEcheance->setDateTime(getEcheance());
         ui->visuEcheance->show();
+        if (getEcheance()!=QDateTime()) ui->visuEcheance->setChecked(true);
         ui->visuPrio->show();
         ui->visuAction->show();
         ui->visuStatut->show();
+        if (getStatut()==1) ui->statutEnCours->setChecked(true);
+        else if (getStatut()==2) ui->statutTermine->setChecked(true);
+        else ui->statutEnAttente->setChecked(true);
 
     }
 
@@ -109,11 +116,12 @@ namespace NOTES {
                 action = ((MementoTache*) m)->getAction();
                 priorite = ((MementoTache*) m)->getPriorite();
                 echeance = ((MementoTache*) m)->getEcheance();
+                statut = ((MementoTache*) m)->getStatut();
             }
 
       MementoTache* Tache::creerMemento() const { return new MementoTache(this); }
-      MementoTache::MementoTache(const Tache& n): MementoNote(n), action(n.getAction()), priorite(n.getPriorite()), echeance(n.getEcheance()){}
-      MementoTache::MementoTache(const Tache* n): MementoNote(n), action(n->getAction()), priorite(n->getPriorite()), echeance(n->getEcheance()){}
+      MementoTache::MementoTache(const Tache& n): MementoNote(n), action(n.getAction()), priorite(n.getPriorite()), echeance(n.getEcheance()), statut(n.getStatut()){}
+      MementoTache::MementoTache(const Tache* n): MementoNote(n), action(n->getAction()), priorite(n->getPriorite()), echeance(n->getEcheance()), statut(n->getStatut()){}
 
 
     void Note::sauvegarder(Ui::MainWindow * ui){
@@ -125,19 +133,20 @@ namespace NOTES {
         setTexte(ui->editTexte->toPlainText());
     }
 
-    // TODO : Rajouter dans l'UI de quoi changer le fichier et l'échéance
-
     void Media::sauvegarder(Ui::MainWindow * ui){
         Note::sauvegarder(ui);
         setTexte(ui->editTexte->toPlainText());
-        //setFichier(ui->editFichier->text());
+        setFichier(ui->editMedia->text());
     }
 
     void Tache::sauvegarder(Ui::MainWindow * ui){
         Note::sauvegarder(ui);
         setAction(ui->editAction->text());
         setPriorite(ui->editPrio->currentText().toInt());
-        //setEcheance(ui->editEcheance->);
+        setEcheance(ui->editEcheance->dateTime());
+        if (ui->statutEnCours->isChecked()==true) setStatut(1);
+        else if  (ui->statutTermine->isChecked()==true) setStatut(2);
+        else setStatut(0);
     }
 
 

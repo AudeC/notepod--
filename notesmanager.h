@@ -76,7 +76,7 @@ namespace NOTES {
         QString getTexte() const { return texte; }
         void setTexte(const QString& s) { texte = s; modifier(); }
         QString getClass() const { return "Article"; }
-          virtual void visualiser(Ui::MainWindow * ui);
+        virtual void visualiser(Ui::MainWindow * ui);
         virtual void sauvegarder(Ui::MainWindow * ui);
         virtual MementoArticle* creerMemento() const;
         virtual void SetMemento(MementoNote *m);
@@ -125,10 +125,12 @@ namespace NOTES {
         QString action;
         int priorite;
         QDateTime echeance;
+        int statut;
     public:
         QString& getAction() { return action; }
         int getPriorite() const{ return priorite; }
         QDateTime getEcheance() const { return echeance; }
+        int getStatut() const {return statut;}
         MementoTache(const Tache& n);
         MementoTache(const Tache* n);
     };
@@ -139,22 +141,25 @@ namespace NOTES {
         QString action;
         int priorite;
         QDateTime echeance;
+        int statut;
 
         friend class NotesManager;
         friend class MainWindow;
     public:
-        Tache(const QString& i, const QString& ti, const QString& a = "", int p = 0, QDateTime e = QDateTime()):
-            Note(i ,ti), action(a), priorite(p), echeance(e){}
+        Tache(const QString& i, const QString& ti, const QString& a = "", int p = 0, QDateTime e = QDateTime(), int s = 0):
+        Note(i ,ti), action(a), priorite(p), echeance(e), statut(s){}
         QString getAction() const{ return action; }
         int getPriorite() const{ return priorite; }
         QDateTime getEcheance() const { return echeance; }
+        int getStatut() const {return statut;}
         void setAction(const QString& s) { action = s; modifier();  }
         void setPriorite(int i) { priorite = i;  modifier(); }
         void setEcheance(QDateTime d) { echeance = d;    modifier();}
+        void setStatut(int s) { statut=s; modifier();}
         QString getClass() const { return "Tache"; }
-         virtual  void visualiser(Ui::MainWindow * ui);
+        virtual  void visualiser(Ui::MainWindow * ui);
         virtual void sauvegarder(Ui::MainWindow * ui);
-         virtual MementoTache* creerMemento() const;
+        virtual MementoTache* creerMemento() const;
         virtual void SetMemento(MementoNote* m);
     };
 

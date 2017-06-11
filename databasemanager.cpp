@@ -5,6 +5,8 @@
 #include <QDebug>
 #include "notesmanager.h"
 
+
+
 DatabaseManager::DatabaseManager(const QString& path)
 {
    m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -41,11 +43,13 @@ void DatabaseManager::clear(){
 
 void DatabaseManager::insert(NOTES::Tache * n){
       QSqlQuery s;
-      s.prepare("INSERT INTO notes(id, titre, type, texte) VALUES(:id, :titre, :type, :text)");
+      s.prepare("INSERT INTO notes(id, titre, type, texte, echeance, statut) VALUES(:id, :titre, :type, :text, :echeance, :statut)");
       s.bindValue(":id", n->getId());
       s.bindValue(":titre", n->getTitle());
       s.bindValue(":type", "Tache");
       s.bindValue(":text", n->getAction());
+      s.bindValue(":echeance", n->getEcheance());
+      s.bindValue(":statut", n->getStatut());
 
       if(s.exec()) qDebug() << "insertion tache";
       else qDebug() << s.lastError();
@@ -53,12 +57,13 @@ void DatabaseManager::insert(NOTES::Tache * n){
 
 void DatabaseManager::insert(NOTES::Media * n){
   QSqlQuery s;
-  s.prepare("INSERT INTO notes(id, titre, type, texte, media) VALUES(:id, :titre, :type, :text, :med)");
+  s.prepare("INSERT INTO notes(id, titre, type, texte, media, fichier) VALUES(:id, :titre, :type, :text, :med, :fichier)");
   s.bindValue(":id", n->getId());
   s.bindValue(":titre", n->getTitle());
   s.bindValue(":type", "Media");
   s.bindValue(":text", n->getTexte());
   s.bindValue(":media", n->getType());
+  s.bindValue(":fichier", n->getFichier());
   if(s.exec()) qDebug() << "insertion media";
   else qDebug() << s.lastError();
 }
@@ -117,7 +122,7 @@ void DatabaseManager::save(const vector<NOTES::Note *> notes){
 
 void DatabaseManager::load(NOTES::NotesManager* m){
     QSqlQuery query;
-    query.prepare("SELECT id, titre, type, texte, priorite, echeance, fichier, media FROM notes");
+    query.prepare("SELECT id, titre, type, texte, priorite, echeance, fichier, media, statut FROM notes");
 
        qDebug() << "Je me loade";
     if (query.exec())
@@ -132,7 +137,7 @@ void DatabaseManager::load(NOTES::NotesManager* m){
             if(ty == "Article"){
                 m->addNote(new NOTES::Article(i, ti, query.value(3).toString()));
             } else if(ty == "Tache"){
-                m->addNote(new NOTES::Tache(i, ti, query.value(3).toString(), query.value(4).toInt(), query.value(5).toDateTime()));
+                m->addNote(new NOTES::Tache(i, ti, query.value(3).toString(), query.value(4).toInt(), query.value(5).toDateTime(), query.value(9).toInt()));
             } else if(ty == "Media"){
                  m->addNote(new NOTES::Media(i, ti, query.value(7).toString(), query.value(3).toString(), query.value(6).toString()));
             } else if(ty == "Note"){

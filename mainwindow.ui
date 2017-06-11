@@ -514,42 +514,6 @@
          <item row="8" column="1">
           <widget class="QLineEdit" name="editAction"/>
          </item>
-         <item row="13" column="0">
-          <widget class="QPushButton" name="btnSuppr">
-           <property name="text">
-            <string>Supprimer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="1">
-          <widget class="QPushButton" name="btnSauver">
-           <property name="text">
-            <string>Sauvegarder</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0">
-          <widget class="QPushButton" name="btnHistorique">
-           <property name="text">
-            <string>Historique</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <widget class="QWidget" name="historique" native="true">
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <widget class="QListWidget" name="anciennesVersions">
-              <item>
-               <property name="text">
-                <string>Historique</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
          <item row="9" column="0">
           <widget class="QLabel" name="visuStatut">
            <property name="text">
@@ -557,8 +521,32 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QDateTimeEdit" name="editEcheance"/>
+         <item row="9" column="1">
+          <widget class="QWidget" name="editStatut" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QRadioButton" name="statutEnAttente">
+              <property name="text">
+               <string>En attente</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="statutEnCours">
+              <property name="text">
+               <string>En cours</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="statutTermine">
+              <property name="text">
+               <string>Terminée</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
          <item row="10" column="0">
           <widget class="QCheckBox" name="visuEcheance">
@@ -566,6 +554,9 @@
             <string>Date d'échéance</string>
            </property>
           </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QDateTimeEdit" name="editEcheance"/>
          </item>
          <item row="11" column="0">
           <widget class="QCheckBox" name="visuPrio">
@@ -603,11 +594,40 @@
            </item>
           </widget>
          </item>
-         <item row="9" column="1">
-          <widget class="QLineEdit" name="editStatut">
-           <property name="readOnly">
-            <bool>true</bool>
+         <item row="13" column="0">
+          <widget class="QPushButton" name="btnSuppr">
+           <property name="text">
+            <string>Supprimer</string>
            </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QPushButton" name="btnSauver">
+           <property name="text">
+            <string>Sauvegarder</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QPushButton" name="btnHistorique">
+           <property name="text">
+            <string>Historique</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QWidget" name="historique" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QListWidget" name="anciennesVersions">
+              <item>
+               <property name="text">
+                <string>Historique</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
@@ -616,10 +636,6 @@
      </widget>
     </item>
    </layout>
-   <zorder>anciennesVersions</zorder>
-   <zorder>visuCont_2</zorder>
-   <zorder>anciennesVersions</zorder>
-   <zorder>visualisation</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -682,19 +698,36 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QListWidget" name="listeNotes">
-       <property name="minimumSize">
-        <size>
-         <width>130</width>
-         <height>511</height>
-        </size>
+      <widget class="QListWidget" name="listeNotes"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="visuTaches">
+       <property name="text">
+        <string>Tâches courantes</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="listeTaches"/>
      </item>
      <item>
       <widget class="QPushButton" name="btnAjouter">
        <property name="text">
         <string>Nouvelle note</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnArchive">
+       <property name="text">
+        <string>Notes archivées</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnCorbeille">
+       <property name="text">
+        <string>Corbeille</string>
        </property>
       </widget>
      </item>

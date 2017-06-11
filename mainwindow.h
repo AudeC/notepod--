@@ -32,6 +32,7 @@ public:
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
+    void affEcheance(bool);
     void chercherFichier();
     void ouvrirDenis();
     void sauvegarder();
