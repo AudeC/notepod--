@@ -185,7 +185,7 @@ namespace NOTES {
 
     void NotesManager::addRelation(Relation* r)
     {
-        relations.push_back(*r);
+        relations.push_back(r);
     }
 
     Note& NotesManager::getNote(const QString& id) {
@@ -208,16 +208,17 @@ namespace NOTES {
         return *r;
     }
 
-    Relation& NotesManager::getRelation(const QString& n)
+    Relation* NotesManager::getRelation(const QString& n)
     {
         int j = 0;
-        for(Relation i: relations)
+        for(Relation* i: relations)
         {
-            if (i.getTitre() == n) return relations[j];
+            if (i->getTitre() == n) return relations[j];
             j++;
         }
         throw new NotesException("La relation n'existe pas");
     }
+
     Note& NotesManager::getNewNote(const QString& id) {
         Note* a = new Note(id, "");
         addNote(a);

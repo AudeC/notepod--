@@ -185,8 +185,7 @@ namespace NOTES {
             Note& getMb2() const { return *mb2;  }
             bool contient(Note* m) const
             {
-                if (m == mb1 || m == mb2) return true;
-                else return false;
+                return m == mb1 || m == mb2;
             }
         };
 
@@ -204,6 +203,10 @@ namespace NOTES {
         vector<Couple> getCouples() const { return couples; }
         bool getOrientation() { return oriente; }
 
+        void setTitre(const QString& t) { titre = t; }
+        void setDescription(const QString& t) { description = t; }
+        void setOrientation(bool b) { oriente = b; }
+
         void ajouterCouple(Note* m1, Note* m2, const QString& la = "")
         {
             for(Couple c : couples)
@@ -212,6 +215,19 @@ namespace NOTES {
             }
             couples.push_back(Couple(m1, m2, la));
         }
+
+
+        void enleverCouple(Note* m1, Note* m2)
+        {
+            for(vector<Couple>::const_iterator i = couples.cbegin(); i != couples.cend(); i++)
+            {
+                if ((*i).contient(m1) && (*i).contient(m2)){
+                    couples.erase(i);
+                }
+            }
+        }
+
+
 
     };
 
@@ -232,7 +248,7 @@ namespace NOTES {
 
     protected:
         vector<Note*> notes;
-        vector<Relation> relations;
+        vector<Relation*> relations;
         map<QString, vector<MementoNote*>> historique; // tableau associatif de vecteurs de Memento
 
         QString filename;
@@ -278,11 +294,12 @@ namespace NOTES {
 
         Note& getNewNote(const QString& id);
         Note& getNote(const QString& id);
+         Note* getNotePtr(const QString& id){ return &getNote(id); }
         Article& getNewArticle(const QString& id);
         Tache& getNewTache(const QString& id);
         Media& getNewMedia(const QString& id, enum Mediatype m = image);
         Relation& getNewRelation(const QString& n, const QString& d = "", bool o = false);
-        Relation& getRelation(const QString& n);
+        Relation* getRelation(const QString& n);
         vector<Note*> getNotes(){ return notes; }
 
         void load();

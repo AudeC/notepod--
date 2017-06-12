@@ -27,6 +27,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void ajouterNote(NOTES::Note *a);
+     using NOTES::NotesManager::getNotes;
+    using NOTES::NotesManager::getNotePtr;
     void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
     using NotesManager::getRelation;
 public slots:
@@ -69,10 +71,14 @@ public:
 private:
     Ui::Relations *ui;
     MainWindow* m;
-
+    NOTES::Relation* relationCourante;
+    void afficherCouples();
 
 public slots :
     void editerRel(QListWidgetItem *);
+    void ajouterCouple();
+    void enleverCouple();
+    void accepter();
 };
 
 

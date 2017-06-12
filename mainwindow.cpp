@@ -43,13 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
 
     addRelation(new NOTES::Relation("test", "descri"));
-    getRelation("test").ajouterCouple(new NOTES::Note("coucou", "yolo"), new NOTES::Note("fleur", "hihihi"), "hey !");
     addRelation(new NOTES::Relation("test2", "descri2"));
 
     // Ajout des relations
-    for(NOTES::Relation r : relations)
+    for(NOTES::Relation* r : relations)
     {
-        ui->listeRelations->addItem(r.getTitre());
+        ui->listeRelations->addItem(r->getTitre());
     }
     connect(ui->listeRelations, SIGNAL(itemDoubleClicked(QListWidgetItem*)), fenRel, SLOT(editerRel(QListWidgetItem*)));
 
