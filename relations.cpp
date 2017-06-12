@@ -4,19 +4,21 @@
 Relations::Relations(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Relations),
-    m( (MainWindow*) parent )
+    m( (MainWindow*) parent ),
+    relationCourante(nullptr)
 {
 
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepter()));
 
      ui->setupUi(this);
+     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepter()));
 
 
 }
 
 
 void Relations::accepter(){
-    // Quand on a appuyé sur "Ok"
+
+    qDebug() << "acceptey";
 
     relationCourante->setTitre(ui->editTitre->text());
     relationCourante->setDescription(ui->editDesc->text());

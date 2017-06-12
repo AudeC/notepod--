@@ -49,7 +49,8 @@ void DatabaseManager::insert(NOTES::Tache * n){
       s.bindValue(":type", "Tache");
       s.bindValue(":text", n->getAction());
       s.bindValue(":echeance", n->getEcheance());
-      s.bindValue(":statut", n->getStatut());
+      int statut = n->getStatut() ? 1 : 0;
+      s.bindValue(":statut", statut);
 
       if(s.exec()) qDebug() << "insertion tache";
       else qDebug() << s.lastError();
@@ -153,7 +154,7 @@ bool DatabaseManager::createTable()
 {
     bool success = true;
     QSqlQuery query;
-    query.prepare("CREATE TABLE notes(id TEXT PRIMARY KEY, titre TEXT, type TEXT, texte TEXT, priorite INTEGER, echeance DATE, fichier TEXT, media TEXT);");
+    query.prepare("CREATE TABLE notes(id TEXT PRIMARY KEY, titre TEXT, type TEXT, texte TEXT, priorite INTEGER, echeance DATE, fichier TEXT, media TEXT, statut INTEGER);");
 
     if (!query.exec())
     {
