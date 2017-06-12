@@ -307,6 +307,7 @@ namespace NOTES {
         virtual ~NotesManager()
         {
             db.save(notes);
+            db.save(relations);
             notes.clear();
             relations.clear();
             filename = "";

@@ -228,6 +228,8 @@ namespace NOTES {
 
     void NotesManager::save() {
         db.save(notes);
+        db.save(relations);
+        qDebug() << "Sauvegarde effectuée";
     }
 
  void NotesManager::load(){

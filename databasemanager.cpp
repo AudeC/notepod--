@@ -22,21 +22,22 @@ DatabaseManager::DatabaseManager(const QString& path)
    }
 }
 
-void DatabaseManager::clear(){
-    bool success = false;
+void DatabaseManager::clearNotes(){
 
     QSqlQuery removeQuery;
     removeQuery.prepare("DELETE FROM notes");
+    removeQuery.exec();
 
-    if (removeQuery.exec())
-    {
-        success = true;
-    }
-    else
-    {
-        qDebug() << "remove all notes failed: " << removeQuery.lastError();
-    }
+}
 
+void DatabaseManager::clearRelations(){
+
+    QSqlQuery removeQuery;
+    removeQuery.prepare("DELETE FROM relations");
+    removeQuery.exec();
+
+    removeQuery.prepare("DELETE FROM couples");
+    removeQuery.exec();
 
 }
 
@@ -107,22 +108,47 @@ void DatabaseManager::insert(NOTES::Note * n){
 
 
 
+void DatabaseManager::save(const vector<NOTES::Relation*> relations){
+
+   clearRelations();
+    for(NOTES::Relation* r : relations){
+        QSqlQuery s;
+        s.prepare("INSERT INTO relations(titre, description, oriente) VALUES(:titre, :desc, :o)");
+        s.bindValue(":titre", r->getTitre());
+        s.bindValue(":desc", r->getDescription());
+        int o = r->getOrientation() ? 1 : 0;
+        s.bindValue(":o", o);
+        if(s.exec()) qDebug() << "insertion relation";
+
+        for(NOTES::Relation::Couple c : r->getCouples()){
+
+            s.prepare("INSERT INTO couples(relation, id1, id2, label) VALUES(:rel, :mb1, :mb2, :la)");
+            s.bindValue(":rel", r->getTitre());
+            s.bindValue(":mb1", c.getMb1().getId());
+            s.bindValue(":mb2", c.getMb2().getId());
+            s.bindValue(":la", c.getLabel());
+            if(s.exec()) qDebug() << "insertion couple";
+            else qDebug() << s.lastError();
+
+        }
+
+    }
+
+}
 
 void DatabaseManager::save(const vector<NOTES::Note *> notes){
 
-   clear();
+   clearNotes();
     for(NOTES::Note* i : notes){
-
         insert(i);
-
-
-
     }
 
 }
 
 void DatabaseManager::load(NOTES::NotesManager* m){
     QSqlQuery query;
+
+    // CHARGER NOTES
     query.prepare("SELECT id, titre, type, texte, priorite, echeance, fichier, media, statut FROM notes");
 
        qDebug() << "Je me loade";
@@ -148,20 +174,65 @@ void DatabaseManager::load(NOTES::NotesManager* m){
        }
     }
 
+    // CHARGER RELATIONS
+    query.prepare("SELECT titre, description, oriente FROM relations");
+
+       qDebug() << "Je me loade";
+    if (query.exec())
+    {
+       while (query.next())
+       {
+          // it exists
+           qDebug() << "Une relation trouvee !!";
+            QString titre = query.value(0).toString();
+            QString de = query.value(1).toString();
+            QString orie = query.value(2).toString();
+            bool o = orie == "1" ? true : false;
+            m->addRelation(new NOTES::Relation(titre, de, o));
+
+       }
+    }
+
+    //CHARGER COUPLES
+    query.prepare("SELECT relation, id1, id2, label FROM couples");
+
+       qDebug() << "Je me loade";
+    if (query.exec())
+    {
+       while (query.next())
+       {
+          // it exists
+           qDebug() << "Un couple trouve !!";
+            QString relation = query.value(0).toString();
+            QString id1 = query.value(1).toString();
+            QString id2 = query.value(2).toString();
+            QString label = query.value(3).toString();
+
+            m->getRelation(relation)->ajouterCouple(m->getNotePtr(id1), m->getNotePtr(id2), label);
+       }
+    }
+
+
+
 }
 
 bool DatabaseManager::createTable()
 {
-    bool success = true;
     QSqlQuery query;
     query.prepare("CREATE TABLE notes(id TEXT PRIMARY KEY, titre TEXT, type TEXT, texte TEXT, priorite INTEGER, echeance DATE, fichier TEXT, media TEXT, statut INTEGER);");
 
-    if (!query.exec())
-    {
-        qDebug() << "Couldn't create the table 'notes': one might already exist.";
-        success = false;
-    }
+    query.exec();
 
-    return success;
+    query.prepare("CREATE TABLE relations(titre TEXT PRIMARY KEY, description TEXT, oriente INTEGER);");
+
+    query.exec();
+
+    query.prepare("CREATE TABLE couples(relation TEXT, id1 TEXT, id2 TEXT, label TEXT);");
+
+    query.exec();
+
+
+
+    return true;
 }
 

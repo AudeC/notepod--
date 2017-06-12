@@ -42,8 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->anciennesVersions, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(restaurerNote(QListWidgetItem*)));
 
-    addRelation(new NOTES::Relation("test", "descri"));
-    addRelation(new NOTES::Relation("test2", "descri2"));
+
 
     // Ajout des relations
     for(NOTES::Relation* r : relations)

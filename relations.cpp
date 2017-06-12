@@ -20,7 +20,7 @@ void Relations::accepter(){
 
     qDebug() << "acceptey";
 
-    relationCourante->setTitre(ui->editTitre->text());
+    //relationCourante->setTitre(ui->editTitre->text());
     relationCourante->setDescription(ui->editDesc->text());
     relationCourante->setOrientation(ui->checkSens->isChecked());
 }
@@ -69,6 +69,7 @@ void Relations::editerRel(QListWidgetItem * i)
     relationCourante = m->getRelation(i->text());
 
     ui->editTitre->setText(relationCourante->getTitre());
+    ui->editTitre->setDisabled(true);
     ui->checkSens->setChecked(relationCourante->getOrientation());
     ui->editDesc->setText(relationCourante->getDescription());
 

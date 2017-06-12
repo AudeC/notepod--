@@ -12,7 +12,9 @@ public:
     bool createTable();
     void load(NOTES::NotesManager *m);
     void save(vector<NOTES::Note*> notes);
-    void clear();
+    void save(vector<NOTES::Relation*>);
+    void clearNotes();
+    void clearRelations();
     void insert(NOTES::Tache *);
     void insert(NOTES::Media *);
     void insert(NOTES::Article *);
