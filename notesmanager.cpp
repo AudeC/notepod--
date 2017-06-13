@@ -98,11 +98,29 @@ namespace NOTES {
         ui->editAction->show();
         ui->editAction->setText(action);
         ui->editStatut->show();
-        ui->editEcheance->setDateTime(getEcheance());
         ui->visuEcheance->show();
-        if (getEcheance()!=QDateTime()) ui->visuEcheance->setChecked(true);
+        if (getEcheance()!=QDateTime())
+        {
+            ui->visuEcheance->setChecked(true);
+            ui->editEcheance->setDateTime(getEcheance());
+        }
+        else
+        {
+            ui->visuEcheance->setChecked(false);
+            ui->editEcheance->setDateTime(QDateTime::currentDateTime());
+        }
         ui->visuPrio->show();
-        if (getPriorite()!=0) ui->visuPrio->setChecked(true);
+        if (getPriorite()!=0)
+        {
+            ui->visuPrio->setChecked(true);
+            int index = ui->editPrio->findText(QString::number(getPriorite()));
+            ui->editPrio->setCurrentIndex(index);
+        }
+        else
+        {
+            ui->visuPrio->setChecked(false);
+            ui->editPrio->setCurrentIndex(0);
+        }
         ui->visuAction->show();
         ui->visuStatut->show();
         if (getStatut()==2) ui->statutEnCours->setChecked(true);
@@ -143,8 +161,8 @@ namespace NOTES {
     void Tache::sauvegarder(Ui::MainWindow * ui){
         Note::sauvegarder(ui);
         setAction(ui->editAction->text());
-        setPriorite(ui->editPrio->currentText().toInt());
-        setEcheance(ui->editEcheance->dateTime());
+        if (ui->visuPrio->isChecked()==true) setPriorite(ui->editPrio->currentText().toInt());
+        if (ui->visuEcheance->isChecked()==true) setEcheance(ui->editEcheance->dateTime());
         if (ui->statutEnCours->isChecked()==true)
         {
             if (ui->listeTaches->findItems(getId(), Qt::MatchExactly).size()==0)
@@ -175,7 +193,7 @@ namespace NOTES {
                         }
                 }
             }
-            if  (ui->statutTermine->isChecked()==true) setStatut(3);
+            if  (ui->statutTermine->isChecked()==true||ui->editEcheance->dateTime()<QDateTime::currentDateTime()) setStatut(3);
             else setStatut(1);
         }
     }

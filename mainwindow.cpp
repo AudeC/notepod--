@@ -102,7 +102,21 @@ void MainWindow::affEcheance(bool b)
     else
     {
         ui->editEcheance->hide();
-        //(NOTES::Tache)noteOuverte->setEcheance(QDateTime());
+        NOTES::Tache* t= (NOTES::Tache*)noteOuverte;
+        t->setEcheance(QDateTime());
+        noteOuverte->visualiser(ui);
+    }
+}
+
+void MainWindow::affPriorite(bool b)
+{
+    if (b==true) ui->editPrio->show();
+    else
+    {
+        ui->editPrio->hide();
+        NOTES::Tache* t= (NOTES::Tache*)noteOuverte;
+        t->setPriorite(0);
+        noteOuverte->visualiser(ui);
     }
 }
 
@@ -143,13 +157,8 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
     ui->btnParcourir->hide();
     ui->editMedia->hide();
 
-    foreach(QCheckBox* box, this->findChildren<QCheckBox*>())
-            {
-                box->setChecked(false);
-            }
-
     connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
-    connect(ui->visuPrio, SIGNAL(toggled(bool)), ui->editPrio, SLOT(setVisible(bool)));
+    connect(ui->visuPrio, SIGNAL(toggled(bool)), this, SLOT(affPriorite(bool)));
     connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
 
     NOTES::Note& a = getNote(i->text());

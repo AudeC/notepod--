@@ -45,12 +45,13 @@ void DatabaseManager::clearRelations(){
 
 void DatabaseManager::insert(NOTES::Tache * n){
       QSqlQuery s;
-      s.prepare("INSERT INTO notes(id, titre, type, texte, echeance, statut) VALUES(:id, :titre, :type, :text, :echeance, :statut)");
+      s.prepare("INSERT INTO notes(id, titre, type, texte, echeance, priorite, statut) VALUES(:id, :titre, :type, :text, :echeance, :priorite, :statut)");
       s.bindValue(":id", n->getId());
       s.bindValue(":titre", n->getTitle());
       s.bindValue(":type", "Tache");
       s.bindValue(":text", n->getAction());
       s.bindValue(":echeance", n->getEcheance());
+      s.bindValue(":priorite", n->getPriorite());
       s.bindValue(":statut", n->getStatut());
 
       if(s.exec()) qDebug() << "insertion tache";
