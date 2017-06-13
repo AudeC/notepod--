@@ -738,11 +738,11 @@
    <property name="minimumSize">
     <size>
      <width>125</width>
-     <height>558</height>
+     <height>577</height>
     </size>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetVerticalTitleBar</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
     <string>Relations</string>
@@ -754,6 +754,13 @@
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
       <widget class="QListWidget" name="listeRelations"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnAjouterRel">
+       <property name="text">
+        <string>Nouvelle relation</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

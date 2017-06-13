@@ -146,7 +146,7 @@ namespace NOTES {
         friend class NotesManager;
         friend class MainWindow;
     public:
-        Tache(const QString& i, const QString& ti, const QString& a = "", int p = 0, QDateTime e = QDateTime(), int s = 0):
+        Tache(const QString& i, const QString& ti, const QString& a = "", int p = 0, QDateTime e = QDateTime(), int s = 1):
         Note(i ,ti), action(a), priorite(p), echeance(e), statut(s){}
         QString getAction() const{ return action; }
         int getPriorite() const{ return priorite; }

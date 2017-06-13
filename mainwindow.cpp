@@ -29,9 +29,16 @@ MainWindow::MainWindow(QWidget *parent) :
     // Ajout des notes
     for(NOTES::Note* i : getNotes())
     {
-        ui->listeNotes->addItem(i->getId());
+        if (i->getClass()=="Tache")
+        {
+            NOTES::Tache* t= static_cast<NOTES::Tache*>(i);
+            if (t->getStatut()==2) ui->listeTaches->addItem(i->getId());
+            else ui->listeNotes->addItem(i->getId());
+        }
+        else ui->listeNotes->addItem(i->getId());
     }
     connect(ui->listeNotes, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(visualiserNote(QListWidgetItem*)));
+    connect(ui->listeTaches, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(visualiserNote(QListWidgetItem*)));
 
     ui->visualisation->hide();
     connect(ui->btnSauver, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()));
@@ -50,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->listeRelations->addItem(r->getTitre());
     }
     connect(ui->listeRelations, SIGNAL(itemDoubleClicked(QListWidgetItem*)), fenRel, SLOT(editerRel(QListWidgetItem*)));
+    connect(ui->btnAjouterRel, SIGNAL(clicked(bool)), fenRel, SLOT(open())); //faire une fonction creerRel
 
 }
 

@@ -1,3 +1,4 @@
+
 #include "databasemanager.h"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -50,8 +51,7 @@ void DatabaseManager::insert(NOTES::Tache * n){
       s.bindValue(":type", "Tache");
       s.bindValue(":text", n->getAction());
       s.bindValue(":echeance", n->getEcheance());
-      int statut = n->getStatut() ? 1 : 0;
-      s.bindValue(":statut", statut);
+      s.bindValue(":statut", n->getStatut());
 
       if(s.exec()) qDebug() << "insertion tache";
       else qDebug() << s.lastError();
@@ -164,7 +164,7 @@ void DatabaseManager::load(NOTES::NotesManager* m){
             if(ty == "Article"){
                 m->addNote(new NOTES::Article(i, ti, query.value(3).toString()));
             } else if(ty == "Tache"){
-                m->addNote(new NOTES::Tache(i, ti, query.value(3).toString(), query.value(4).toInt(), query.value(5).toDateTime(), query.value(9).toInt()));
+                m->addNote(new NOTES::Tache(i, ti, query.value(3).toString(), query.value(4).toInt(), query.value(5).toDateTime(), query.value(8).toInt()));
             } else if(ty == "Media"){
                  m->addNote(new NOTES::Media(i, ti, query.value(7).toString(), query.value(3).toString(), query.value(6).toString()));
             } else if(ty == "Note"){

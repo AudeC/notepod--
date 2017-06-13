@@ -102,10 +102,11 @@ namespace NOTES {
         ui->visuEcheance->show();
         if (getEcheance()!=QDateTime()) ui->visuEcheance->setChecked(true);
         ui->visuPrio->show();
+        if (getPriorite()!=0) ui->visuPrio->setChecked(true);
         ui->visuAction->show();
         ui->visuStatut->show();
-        if (getStatut()==1) ui->statutEnCours->setChecked(true);
-        else if (getStatut()==2) ui->statutTermine->setChecked(true);
+        if (getStatut()==2) ui->statutEnCours->setChecked(true);
+        else if (getStatut()==3) ui->statutTermine->setChecked(true);
         else ui->statutEnAttente->setChecked(true);
 
     }
@@ -144,17 +145,44 @@ namespace NOTES {
         setAction(ui->editAction->text());
         setPriorite(ui->editPrio->currentText().toInt());
         setEcheance(ui->editEcheance->dateTime());
-        if (ui->statutEnCours->isChecked()==true) setStatut(1);
-        else if  (ui->statutTermine->isChecked()==true) setStatut(2);
-        else setStatut(0);
+        if (ui->statutEnCours->isChecked()==true)
+        {
+            if (ui->listeTaches->findItems(getId(), Qt::MatchExactly).size()==0)
+            {
+                ui->listeTaches->addItem(getId());
+                for (int i = 0; i < ui->listeNotes->count(); i++)
+                {
+                        if (ui->listeNotes->item(i)->text()==getId())
+                        {
+                            delete ui->listeNotes->item(i);
+                            break;
+                        }
+                }
+            }
+            setStatut(2);
+        }
+        else
+        {
+            if (ui->listeNotes->findItems(getId(), Qt::MatchExactly).size()==0)
+            {
+                ui->listeNotes->addItem(getId());
+                for (int i = 0; i < ui->listeTaches->count(); i++)
+                {
+                        if (ui->listeTaches->item(i)->text()==getId())
+                        {
+                            delete ui->listeTaches->item(i);
+                            break;
+                        }
+                }
+            }
+            if  (ui->statutTermine->isChecked()==true) setStatut(3);
+            else setStatut(1);
+        }
     }
-
-
 
     /*
      * NotesManager
      */
-
 
     //NotesManager* NotesManager::instanceUnique= nullptr;
     NotesManager::Handler NotesManager::handler = NotesManager::Handler();
