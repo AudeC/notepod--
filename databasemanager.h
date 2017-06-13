@@ -9,16 +9,9 @@ class DatabaseManager
 
 public:
     DatabaseManager(const QString& path);
-    bool createTable();
     void load(NOTES::NotesManager *m);
     void save(vector<NOTES::Note*> notes);
     void save(vector<NOTES::Relation*>);
-    void clearNotes();
-    void clearRelations();
-    void insert(NOTES::Tache *);
-    void insert(NOTES::Media *);
-    void insert(NOTES::Article *);
-    void insert(NOTES::Note *);
 
 
     bool isOpen() const
@@ -28,5 +21,15 @@ public:
    // void load();
 private:
     QSqlDatabase m_db;
+    bool createTable();
+
+    void clearNotes();
+    void clearRelations();
+    void clearEtat();
+    void insert(NOTES::Tache *);
+    void insert(NOTES::Media *);
+    void insert(NOTES::Article *);
+    void insert(NOTES::Note *);
+
 };
 #endif // DATABASEMANAGER_H

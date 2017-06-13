@@ -23,6 +23,14 @@ DatabaseManager::DatabaseManager(const QString& path)
    }
 }
 
+void DatabaseManager::clearEtat(){
+
+    QSqlQuery removeQuery;
+    removeQuery.prepare("DELETE FROM manager");
+    removeQuery.exec();
+
+}
+
 void DatabaseManager::clearNotes(){
 
     QSqlQuery removeQuery;
@@ -231,6 +239,11 @@ bool DatabaseManager::createTable()
     query.prepare("CREATE TABLE couples(relation TEXT, id1 TEXT, id2 TEXT, label TEXT);");
 
     query.exec();
+
+    query.prepare("CREATE TABLE manager(noteOuverte TEXT);");
+
+    query.exec();
+
 
 
 
