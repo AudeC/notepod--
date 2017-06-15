@@ -134,7 +134,7 @@ void MainWindow::writeSettings(){
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-        writeSettings();
+       //writeSettings();
 
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(this, "Corbeille", "Voulez-vous vider la corbeille ?",
@@ -238,7 +238,9 @@ void MainWindow::supprimer()
     corbeille.push_back(new NOTES::Note(*noteOuverte));
     fenCorbeille->ajouter(noteOuverte);
 
-
+    for(NOTES::Relation* r : relations){
+         r->enleverCouple(noteOuverte);
+    }
 
     if (ui->listeTaches->findItems(noteOuverte->getId(), Qt::MatchExactly).size()!=0)
     {

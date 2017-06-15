@@ -207,7 +207,9 @@ namespace NOTES {
         {
             for(Couple c : couples)
             {
-                if (c.contient(m1) && c.contient(m2)) throw NotesException("Couple d�j� existant");
+                // Gérer si un couple est orienté ou pas
+                if(oriente && &(c.getMb1()) == m1 && &(c.getMb2()) == m2)  throw NotesException("Couple d�j� existant");
+                else if (c.contient(m1) && c.contient(m2)) throw NotesException("Couple d�j� existant");
             }
             couples.push_back(Couple(m1, m2, la));
         }
@@ -215,17 +217,20 @@ namespace NOTES {
 
         void enleverCouple(Note* m1, Note* m2)
         {
-            for(vector<Couple>::const_iterator i = couples.cbegin(); i != couples.cend(); i++)
+
+            for(auto i = couples.cbegin(); i != couples.cend(); i++)
             {
-                if ((*i).contient(m1) && (*i).contient(m2)){
-                    couples.erase(i);
+                 Couple c = *i;
+                if (c.getMb1().getId() == m1->getId() &&c.getMb2().getId() == m2->getId() ){
+                    //couples.erase(i);
+                    qDebug() << " trouvé ";
                 }
             }
         }
 
         void enleverCouple(Note* m1)
         {
-            for(vector<Couple>::const_iterator i = couples.cbegin(); i != couples.cend(); i++)
+            for(auto i = couples.cbegin(); i != couples.cend(); i++)
             {
                 if ((*i).contient(m1)){
                     couples.erase(i);

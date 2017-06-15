@@ -13,6 +13,8 @@ Relations::Relations(QWidget *parent) :
      setWindowTitle("Nouvelle relation");
      setWindowIcon(QIcon("C:/Users/SilverEye/notepod/edit-set-5-256.png"));
      connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepter()));
+     connect(ui->enlever, SIGNAL(clicked()), this, SLOT(enleverCouple()));
+     connect(ui->btnAjouter, SIGNAL(clicked()), this, SLOT(ajouterCouple()));
 
 
 }
@@ -46,7 +48,9 @@ void Relations::ajouterCouple(){
 }
 
 void Relations::enleverCouple(){
-   relationCourante->enleverCouple(m->getNotePtr(ui->comboCouples->currentText()), m->getNotePtr(ui->comboCouples2->currentText()));
+    QString n1 = ui->comboCouples->currentText();
+    QString n2 = ui->comboCouples2->currentText();
+   relationCourante->enleverCouple(m->getNotePtr(n1), m->getNotePtr(n2));
    qDebug() << "enleve";
    afficherCouples();
 }
@@ -77,8 +81,6 @@ void Relations::editerRel(QListWidgetItem * i)
 
     afficherCouples();
 
-    connect(ui->btnAjouter, SIGNAL(clicked()), this, SLOT(ajouterCouple()));
-    connect(ui->enlever, SIGNAL(clicked()), this, SLOT(enleverCouple()));
 
      ui->comboCouples->clear();
      ui->comboCouples2->clear();

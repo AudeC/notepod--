@@ -49,13 +49,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton">
-        <property name="text">
-         <string>RadioButton</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="enlever">
         <property name="text">
          <string>Enlever</string>
