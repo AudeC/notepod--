@@ -34,6 +34,7 @@ public:
     Corbeille* getfenCorbeille() {return fenCorbeille;}
     using NotesManager::getRelation;
     using NotesManager::viderCorbeille;
+    friend class Corbeille;
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);

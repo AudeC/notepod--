@@ -124,9 +124,9 @@ void MainWindow::ouvrirDenis()
     ah->setText("Ça veut dire que...?");
     ah->setStandardButtons(QMessageBox::Ok);
     ah->setDefaultButton(QMessageBox::Ok);
-    QPixmap icon("C:/Users/SilverEye/notepod/denis.brogniart.ah.png");
+    QPixmap icon(QApplication::applicationDirPath()+"/ressources/denis.brogniart.ah.png");
     ah->setIconPixmap(icon);
-    ah->setWindowIcon(QIcon("C:/Users/SilverEye/notepod/1495391974_cancel_16.png"));
+    ah->setWindowIcon(QIcon(QApplication::applicationDirPath()+"/ressources/1495391974_cancel_16.png"));
     ah->show();
 }
 
@@ -173,9 +173,9 @@ void MainWindow::demandeConfirmation()
    conf->setText("Voulez-vous vraiment supprimer cette note?");
    conf->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
    conf->setDefaultButton(QMessageBox::Cancel);
-   QPixmap icon("C:/Users/SilverEye/notepod/delete-512.png");
+   QPixmap icon(QApplication::applicationDirPath()+"/ressources/delete-512.png");
    conf->setIconPixmap(icon);
-   conf->setWindowIcon(QIcon("C:/Users/SilverEye/notepod/warning-icon-png-276616.png"));
+   conf->setWindowIcon(QIcon(QApplication::applicationDirPath()+"/ressources/warning-icon-png-276616.png"));
    connect(conf, SIGNAL(accepted()), this, SLOT(supprimer()));
    conf->show();
 }

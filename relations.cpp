@@ -11,7 +11,7 @@ Relations::Relations(QWidget *parent) :
 
      ui->setupUi(this);
      setWindowTitle("Nouvelle relation");
-     setWindowIcon(QIcon("C:/Users/SilverEye/notepod/edit-set-5-256.png"));
+     setWindowIcon(QIcon(QApplication::applicationDirPath()+"/ressources/edit-set-5-256.png"));
      connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepter()));
 
 
