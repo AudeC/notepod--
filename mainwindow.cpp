@@ -11,11 +11,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("Notepod-- v0.1");
 
+    QSettings settings("Notepod", "Notepod");
+    viderCorbeilleExit = settings.value("viderCorbeilleExit").toBool();
     // Barre de menu
 
     connect(ui->actionNvlleNote_2, SIGNAL(triggered()), fenAjout, SLOT(open()));
     connect(ui->actionSauvegarder, SIGNAL(triggered()), this, SLOT(saveSlot()));
     ui->menuAffichage->addAction(ui->dockRelations_2->toggleViewAction());
+
+    QAction* CorbeilleExit = new QAction("&Vider la corbeille à la sortie");
+    CorbeilleExit->setCheckable(true);
+    ui->menuFichier->addAction(CorbeilleExit);
 
     QAction *actionDenis = new QAction("&Denis", this);
     ui->menuSauvegarder->addAction(actionDenis);
@@ -88,6 +94,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->listeRelations, SIGNAL(itemDoubleClicked(QListWidgetItem*)), fenRel, SLOT(editerRel(QListWidgetItem*)));
     connect(ui->btnAjouterRel, SIGNAL(clicked(bool)), this, SLOT(ajouterRel())); //faire une fonction creerRel
 
+    QString id = settings.value("NoteOuverte").toString();
+   // visualiserNote(new QListWidgetItem(id));
+
+
+
+
 }
 
 void MainWindow::ajouterRel(){
@@ -110,6 +122,38 @@ void MainWindow::restaurerNote(QListWidgetItem * a ){
            // historique[noteOuverte->getId()].pop_back();
         }
     }
+}
+
+void MainWindow::writeSettings(){
+
+        QSettings settings("Notepod", "Notepod");
+        settings.setValue("noteOuverte", noteOuverte->getId());
+        settings.setValue("viderCorbeilleExit", viderCorbeilleExit);
+       // settings.setValue("") // pour en rajouter
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+        writeSettings();
+
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Corbeille", "Voulez-vous vider la corbeille ?",
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+           event->accept();
+
+          QApplication::quit();
+        } else {
+             event->accept();
+             // Sauvegarder la corbeille
+            for(auto i : corbeille){
+                notes.push_back(i);
+            }
+          QApplication::quit();
+        }
+
+
+
 }
 
 void MainWindow::ajouterNote(NOTES::Note *a){
@@ -190,6 +234,7 @@ void MainWindow::sauvegarder(){
 
 void MainWindow::supprimer()
 {
+    noteOuverte->archiver();
     corbeille.push_back(new NOTES::Note(*noteOuverte));
     fenCorbeille->ajouter(noteOuverte);
 

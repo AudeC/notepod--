@@ -5,6 +5,9 @@
 #include <vector>
 #include <QDebug>
 #include <QSqlQuery>
+#include <QSettings>
+#include <QWidget>
+#include <QCloseEvent>
 #include <QDateTime>
 #include  <algorithm>
 using namespace std;

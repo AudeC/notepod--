@@ -23,6 +23,7 @@ private:
     Corbeille* fenCorbeille;
     NOTES::Note* noteOuverte;
     QString fichier;
+    bool viderCorbeilleExit;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -34,7 +35,9 @@ public:
     Corbeille* getfenCorbeille() {return fenCorbeille;}
     using NotesManager::getRelation;
     using NotesManager::viderCorbeille;
+    void writeSettings();
 public slots:
+    void closeEvent(QCloseEvent *event);
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
     void affEcheance(bool);
