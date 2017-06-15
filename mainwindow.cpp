@@ -57,8 +57,13 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->listeRelations->addItem(r->getTitre());
     }
     connect(ui->listeRelations, SIGNAL(itemDoubleClicked(QListWidgetItem*)), fenRel, SLOT(editerRel(QListWidgetItem*)));
-    connect(ui->btnAjouterRel, SIGNAL(clicked(bool)), fenRel, SLOT(open())); //faire une fonction creerRel
+    connect(ui->btnAjouterRel, SIGNAL(clicked(bool)), this, SLOT(ajouterRel())); //faire une fonction creerRel
 
+}
+
+void MainWindow::ajouterRel(){
+    relations.push_back(new NOTES::Relation(ui->titreNouvelleRel->text(), QString()));
+    ui->listeRelations->addItem(ui->titreNouvelleRel->text());
 }
 
 void MainWindow::restaurerNote(QListWidgetItem * a ){

@@ -12,6 +12,7 @@ public:
     void load(NOTES::NotesManager *m);
     void save(vector<NOTES::Note*> notes);
     void save(vector<NOTES::Relation*>);
+    bool createTable();
 
 
     bool isOpen() const
@@ -21,7 +22,6 @@ public:
    // void load();
 private:
     QSqlDatabase m_db;
-    bool createTable();
 
     void clearNotes();
     void clearRelations();

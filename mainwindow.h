@@ -29,7 +29,6 @@ public:
     void ajouterNote(NOTES::Note *a);
     using NOTES::NotesManager::getNotes;
     using NOTES::NotesManager::getNotePtr;
-    void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
     using NotesManager::getRelation;
 public slots:
     void visualiserNote(QListWidgetItem * a);
@@ -39,6 +38,7 @@ public slots:
     void chercherFichier();
     void ouvrirDenis();
     void sauvegarder();
+    void ajouterRel();
     void saveSlot(){
         NotesManager::save();
     }

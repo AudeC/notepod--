@@ -737,7 +737,7 @@
   <widget class="QDockWidget" name="dockRelations_2">
    <property name="minimumSize">
     <size>
-     <width>125</width>
+     <width>148</width>
      <height>577</height>
     </size>
    </property>
@@ -754,6 +754,16 @@
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
       <widget class="QListWidget" name="listeRelations"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Titre : </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="titreNouvelleRel"/>
      </item>
      <item>
       <widget class="QPushButton" name="btnAjouterRel">

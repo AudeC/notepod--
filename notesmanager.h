@@ -21,8 +21,8 @@ namespace NOTES {
       QDateTime modification;
 
       public:
-        QString& getTitle() const { return title; }
-        QDateTime& getModification() const  { return modification; }
+        QString getTitle() const { return title; }
+        QDateTime getModification() const  { return modification; }
         MementoNote(const Note& n);
         MementoNote(const Note* n);
     };
@@ -57,7 +57,7 @@ namespace NOTES {
     class MementoArticle : public MementoNote {
         QString texte;
     public:
-        QString& getTexte() const { return texte; }
+        QString getTexte() const { return texte; }
         MementoArticle(const Article& n);
         MementoArticle(const Article* n);
 
@@ -88,9 +88,9 @@ namespace NOTES {
         enum Mediatype type;
         QString fichier;
     public:
-        QString& getTexte() const { return texte; }
-        enum Mediatype& getType() const { return type; }
-        QString& getFichier() const { return fichier; }
+        QString getTexte() const { return texte; }
+        enum Mediatype getType() const { return type; }
+        QString getFichier() const { return fichier; }
         MementoMedia(const Media& n);
          MementoMedia(const Media* n);
     };
@@ -127,7 +127,7 @@ namespace NOTES {
         QDateTime echeance;
         int statut;
     public:
-        QString& getAction() const { return action; }
+        QString getAction() const { return action; }
         int getPriorite() const{ return priorite; }
         QDateTime getEcheance() const { return echeance; }
         int getStatut() const {return statut;}
@@ -162,10 +162,6 @@ namespace NOTES {
         virtual MementoTache* creerMemento() const;
         virtual void SetMemento(MementoNote* m);
     };
-
-
-
-
 
 
     class Relation
@@ -222,6 +218,16 @@ namespace NOTES {
             for(vector<Couple>::const_iterator i = couples.cbegin(); i != couples.cend(); i++)
             {
                 if ((*i).contient(m1) && (*i).contient(m2)){
+                    couples.erase(i);
+                }
+            }
+        }
+
+        void enleverCouple(Note* m1)
+        {
+            for(vector<Couple>::const_iterator i = couples.cbegin(); i != couples.cend(); i++)
+            {
+                if ((*i).contient(m1)){
                     couples.erase(i);
                 }
             }
