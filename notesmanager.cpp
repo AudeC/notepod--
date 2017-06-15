@@ -98,18 +98,13 @@ namespace NOTES {
         ui->editTitre->setText(getTitle());
         ui->editAction->show();
         ui->editAction->setText(action);
-        ui->editStatut->show();
         ui->visuEcheance->show();
-        /*ui->visuEcheance->setChecked(false);
-        ui->visuPrio->setChecked(false);*/
-
 
         if (getEcheance()!=QDateTime())
         {
             ui->visuEcheance->setChecked(true);
             ui->editEcheance->setDateTime(getEcheance());
             ui->editEcheance->show();
-            ui->visuEcheance->show();
 
         }
         else
@@ -123,7 +118,6 @@ namespace NOTES {
             ui->visuPrio->setChecked(true);
             int index = ui->editPrio->findText(QString::number(getPriorite()));
             ui->editPrio->setCurrentIndex(index);
-            ui->visuPrio->show();
             ui->editPrio->show();
 
         }

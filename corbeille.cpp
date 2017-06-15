@@ -8,7 +8,7 @@ Corbeille::Corbeille(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Corbeille");
-    setWindowIcon(QIcon("C:/Users/SilverEye/notepod/delete-51216.png"));
+    setWindowIcon(QIcon(QApplication::applicationDirPath()+"/ressources/delete-51216.png"));
     ui->btnVider->setEnabled(false);
     ui->btnRest->setEnabled(false);
 
@@ -21,8 +21,6 @@ Corbeille::Corbeille(QWidget *parent) :
 
 void Corbeille::ajouter(NOTES::Note* a)
 {
-    //if (ui->listeCorbeille->count()!=0)
-        //ui->btnVider->setEnabled(false);
     ui->listeCorbeille->addItem(a->getId());
     qDebug() << "ajout d'un item";
 }
@@ -37,13 +35,30 @@ void Corbeille::viderCorbeille()
 {
     ui->listeCorbeille->clear();
     m->viderCorbeille();
-
-
 }
 
 void Corbeille::restaurer()
 {
-    const QString& s = ui->listeCorbeille->currentItem()->text();
+    QString id = ui->listeCorbeille->currentItem()->text();
+    if (m->getNote(id).getClass()=="Tache")
+    {
+        NOTES::Tache* aCopier = new NOTES::Tache(static_cast<NOTES::Tache&>(m->getNote(id)));
+        m->addNote(aCopier);
+    }
+    else if (m->getNote(id).getClass()=="Media")
+    {
+        NOTES::Media* aCopier = new NOTES::Media(static_cast<NOTES::Media&>(m->getNote(id)));
+        m->addNote(aCopier);
+    }
+    else
+    {
+        NOTES::Article* aCopier = new NOTES::Article(static_cast<NOTES::Article&>(m->getNote(id)));
+        m->addNote(aCopier);
+    }
+    QListWidgetItem* it = ui->listeCorbeille->takeItem(ui->listeCorbeille->currentRow());
+    delete it;
+
+
 }
 
 Corbeille::~Corbeille()

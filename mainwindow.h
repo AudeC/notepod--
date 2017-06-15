@@ -36,6 +36,7 @@ public:
     using NotesManager::getRelation;
     using NotesManager::viderCorbeille;
     void writeSettings();
+    friend class Corbeille;
 public slots:
     void closeEvent(QCloseEvent *event);
     void visualiserNote(QListWidgetItem * a);

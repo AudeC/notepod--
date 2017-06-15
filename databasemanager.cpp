@@ -105,10 +105,11 @@ void DatabaseManager::insert(NOTES::Note * n){
      }
 
       QSqlQuery s;
-      s.prepare("INSERT INTO notes(id, titre, type) VALUES(:id, :titre, :type)");
+      s.prepare("INSERT INTO notes(id, titre, type, actif) VALUES(:id, :titre, :type, :actif)");
       s.bindValue(":id", n->getId());
       s.bindValue(":titre", n->getTitle());
       s.bindValue(":type", QString("Note"));
+      s.bindValue(":actif", QString::number(n->isActif()));
 
 
      if(s.exec()) qDebug() << "insertion note";
@@ -170,6 +171,7 @@ void DatabaseManager::load(NOTES::NotesManager* m){
             QString i = query.value(0).toString();
             QString ti = query.value(1).toString();
             QString ty = query.value(2).toString();
+
             if(ty == "Article"){
                 m->addNote(new NOTES::Article(i, ti, query.value(3).toString()));
             } else if(ty == "Tache"){
@@ -228,7 +230,7 @@ void DatabaseManager::load(NOTES::NotesManager* m){
 bool DatabaseManager::createTable()
 {
     QSqlQuery query;
-    query.prepare("CREATE TABLE notes(id TEXT PRIMARY KEY, titre TEXT, type TEXT, texte TEXT, priorite INTEGER, echeance DATE, fichier TEXT, media TEXT, statut INTEGER);");
+    query.prepare("CREATE TABLE notes(id TEXT PRIMARY KEY, titre TEXT, type TEXT, texte TEXT, priorite INTEGER, echeance DATE, fichier TEXT, media TEXT, statut INTEGER, actif INTEGER);");
 
     query.exec();
 

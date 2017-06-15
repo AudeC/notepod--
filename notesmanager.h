@@ -47,6 +47,7 @@ namespace NOTES {
         void modifier(){ modification = QDateTime::currentDateTime();  }
         void setTitle(const QString& t);
         void archiver();
+        bool isActif() { return actif; }
         virtual QString getClass() const { return "Note"; }
         virtual void visualiser(Ui::MainWindow * ui);
         virtual void sauvegarder(Ui::MainWindow * ui);
