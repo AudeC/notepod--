@@ -20,6 +20,7 @@ private:
     Ui::MainWindow *ui;
     Ajout* fenAjout;
     Relations* fenRel;
+    Corbeille* fenCorbeille;
     NOTES::Note* noteOuverte;
     QString fichier;
 
@@ -30,15 +31,19 @@ public:
     using NOTES::NotesManager::getNotes;
     using NOTES::NotesManager::getNotePtr;
     void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
+    Corbeille* getCorbeille() {return fenCorbeille;}
     using NotesManager::getRelation;
+    using NotesManager::getASuppr;
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
     void affEcheance(bool);
     void affPriorite(bool);
     void chercherFichier();
+    void demandeConfirmation();
     void ouvrirDenis();
     void sauvegarder();
+    void supprimer();
     void saveSlot(){
         NotesManager::save();
     }
@@ -82,7 +87,23 @@ public slots :
     void accepter();
 };
 
+class Corbeille : public QDialog
+{
+    Q_OBJECT
 
+public:
+    explicit Corbeille(QWidget *parent = 0);
+    void ajouter(NOTES::Note*);
+    ~Corbeille();
+
+private:
+    Ui::Corbeille *ui;
+    MainWindow* m;
+
+public slots:
+    void demRest();
+    void viderCorbeille();
+};
 
 
 

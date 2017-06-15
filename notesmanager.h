@@ -249,6 +249,8 @@ namespace NOTES {
     protected:
         vector<Note*> notes;
         vector<Relation*> relations;
+        vector<Note*> aSuppr;
+
         map<QString, vector<MementoNote*>> historique; // tableau associatif de vecteurs de Memento
 
         QString filename;
@@ -294,13 +296,14 @@ namespace NOTES {
 
         Note& getNewNote(const QString& id);
         Note& getNote(const QString& id);
-         Note* getNotePtr(const QString& id){ return &getNote(id); }
-        Article& getNewArticle(const QString& id);
-        Tache& getNewTache(const QString& id);
-        Media& getNewMedia(const QString& id, enum Mediatype m = image);
+        Note* getNotePtr(const QString& id){ return &getNote(id); }
+        //Article& getNewArticle(const QString& id);
+        //Tache& getNewTache(const QString& id);
+        //Media& getNewMedia(const QString& id, enum Mediatype m = image);
         Relation& getNewRelation(const QString& n, const QString& d = "", bool o = false);
         Relation* getRelation(const QString& n);
         vector<Note*> getNotes(){ return notes; }
+        vector<Note*> getASuppr() {return aSuppr;}
 
         void load();
         void save();

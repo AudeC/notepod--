@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QDateTime>
+#include  <algorithm>
 using namespace std;
 
 
@@ -15,11 +16,13 @@ namespace Ui {
 class MainWindow;
 class Ajout;
 class Relations;
+class Corbeille;
 }
 
 class MainWindow;
 class Ajout;
 class Relations;
+class Corbeille;
 
 namespace NOTES {
     class NotesException;

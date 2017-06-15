@@ -9,7 +9,8 @@ Ajout::Ajout(QWidget *parent) :
     m( (MainWindow*)parent)
 {
     ui->setupUi(this);
-
+    setWindowTitle("Nouvelle note");
+    setWindowIcon(QIcon("C:/Users/SilverEye/notepod/edit-set-5-256.png"));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accepter()));
 
 }

@@ -99,6 +99,8 @@ namespace NOTES {
         ui->editAction->setText(action);
         ui->editStatut->show();
         ui->visuEcheance->show();
+        /*ui->visuEcheance->setChecked(false);
+        ui->visuPrio->setChecked(false);*/
         if (getEcheance()!=QDateTime())
         {
             ui->visuEcheance->setChecked(true);
