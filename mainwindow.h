@@ -101,9 +101,13 @@ private:
     Ui::Corbeille *ui;
     MainWindow* m;
 
+signals:
+    void activerBtn(bool);
+
 public slots:
     void demRest();
-    void viderCorbeille();
+    void restaurer();
+    void viderCorbeille();    
 };
 
 
