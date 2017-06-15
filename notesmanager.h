@@ -255,8 +255,7 @@ namespace NOTES {
     protected:
         vector<Note*> notes;
         vector<Relation*> relations;
-        vector<Note*> aSuppr;
-
+        vector<Note*> corbeille;
         map<QString, vector<MementoNote*>> historique; // tableau associatif de vecteurs de Memento
 
         QString filename;
@@ -309,7 +308,7 @@ namespace NOTES {
         Relation& getNewRelation(const QString& n, const QString& d = "", bool o = false);
         Relation* getRelation(const QString& n);
         vector<Note*> getNotes(){ return notes; }
-        vector<Note*> getASuppr() {return aSuppr;}
+        void viderCorbeille() { corbeille.clear(); }
 
         void load();
         void save();
@@ -319,6 +318,7 @@ namespace NOTES {
             db.save(relations);
             notes.clear();
             relations.clear();
+            corbeille.clear();
             filename = "";
 
         }

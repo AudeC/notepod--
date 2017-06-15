@@ -24,9 +24,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnAjouter, SIGNAL(clicked()), fenAjout, SLOT(open()));
     connect(ui->btnCorbeille, SIGNAL(clicked()), fenCorbeille, SLOT(open()));
 
+    connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
+    connect(ui->visuPrio, SIGNAL(toggled(bool)), this, SLOT(affPriorite(bool)));
+    connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
+    connect(ui->btnSuppr, SIGNAL(clicked(bool)), this, SLOT(supprimer()));
+
+
     load();
-
-
 
     // Ajout des notes
     for(NOTES::Note* i : getNotes())
@@ -186,10 +190,11 @@ void MainWindow::sauvegarder(){
 
 void MainWindow::supprimer()
 {
-    aSuppr.push_back(noteOuverte);
-    vector<NOTES::Note*>::iterator position = std::find(notes.begin(), notes.end(), getNotePtr(noteOuverte->getId()));
-    if (position != notes.end()) // == myVector.end() means the element was not found
-        notes.erase(position);
+    corbeille.push_back(new NOTES::Note(*noteOuverte));
+    fenCorbeille->ajouter(noteOuverte);
+
+
+
     if (ui->listeTaches->findItems(noteOuverte->getId(), Qt::MatchExactly).size()!=0)
     {
         for (int i = 0; i < ui->listeTaches->count(); i++)
@@ -214,10 +219,17 @@ void MainWindow::supprimer()
         }
         //retirer la note de la liste
     }
-    getCorbeille()->ajouter(noteOuverte);
     ui->visualisation->hide();
     fenCorbeille->open();
-    qDebug()<<"Je supprime"<<aSuppr;
+    try{
+    vector<NOTES::Note*>::iterator position = std::find(notes.begin(), notes.end(), getNotePtr(noteOuverte->getId()));
+    if (position != notes.end()) // == myVector.end() means the element was not found
+        notes.erase(position);
+    } catch(NOTES::NotesException& e){
+        qDebug() << "erreur" ;
+    }
+
+    qDebug()<<"Je supprime"<<corbeille;
 }
 
 void MainWindow::visualiserNote(QListWidgetItem * i){
@@ -247,10 +259,6 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
 
     //décocher par défaut, puis recocher en fonction des attributs de i
 
-    connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
-    connect(ui->visuPrio, SIGNAL(toggled(bool)), this, SLOT(affPriorite(bool)));
-    connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
-    connect(ui->btnSuppr, SIGNAL(clicked(bool)), this, SLOT(supprimer()));
 
 
 

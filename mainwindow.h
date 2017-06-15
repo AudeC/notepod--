@@ -30,13 +30,10 @@ public:
     void ajouterNote(NOTES::Note *a);
     using NOTES::NotesManager::getNotes;
     using NOTES::NotesManager::getNotePtr;
-<<<<<<< HEAD
-=======
-    void visualiserUI(NOTES::Note& n) const { n.visualiser(ui); }
-    Corbeille* getCorbeille() {return fenCorbeille;}
->>>>>>> origin/master
+
+    Corbeille* getfenCorbeille() {return fenCorbeille;}
     using NotesManager::getRelation;
-    using NotesManager::getASuppr;
+    using NotesManager::viderCorbeille;
 public slots:
     void visualiserNote(QListWidgetItem * a);
     void restaurerNote(QListWidgetItem * a);
@@ -46,11 +43,8 @@ public slots:
     void demandeConfirmation();
     void ouvrirDenis();
     void sauvegarder();
-<<<<<<< HEAD
     void ajouterRel();
-=======
     void supprimer();
->>>>>>> origin/master
     void saveSlot(){
         NotesManager::save();
     }

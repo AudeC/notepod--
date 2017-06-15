@@ -21,6 +21,7 @@ void Corbeille::ajouter(NOTES::Note* a)
 {
     if (ui->listeCorbeille->count()==0) ui->btnVider->setEnabled(true);
     ui->listeCorbeille->addItem(a->getId());
+    qDebug() << "ajout d'un item";
 }
 
 void Corbeille::demRest()
@@ -33,16 +34,9 @@ void Corbeille::viderCorbeille()
     ui->listeCorbeille->clear();
     // le NotesManager contient un vecteur aSuppr
     //on veut supprimer tous les pointeurs qu'il contient
-    vector<NOTES::Note*> v = m->getASuppr();
-    for (unsigned int i =0; i< v.size();i++)
-       {
-            delete (v[i]);
-       }
-    /*for (vector<NOTES::Note*>::iterator it = m->getASuppr().begin() ; it != m->getASuppr().end(); ++it)
-    {
-        delete (*it);
-    }
-    m->getASuppr().clear();*/
+    m->viderCorbeille();
+
+
 }
 
 Corbeille::~Corbeille()

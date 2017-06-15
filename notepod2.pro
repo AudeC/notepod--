@@ -29,7 +29,8 @@ SOURCES += \
     notesmanager.cpp \
     ajout.cpp \
     databasemanager.cpp \
-    relations.cpp
+    relations.cpp \
+    corbeille.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,6 +41,7 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     ajout.ui \
-    relations.ui
+    relations.ui \
+    corbeille.ui
 
 DISTFILES +=
