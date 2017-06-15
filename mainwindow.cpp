@@ -5,7 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     fenAjout(new Ajout(this)),
-    fenRel(new Relations(this))
+    fenRel(new Relations(this)),
+    fenCorbeille(new Corbeille(this))
 {
     ui->setupUi(this);
     setWindowTitle("Notepod-- v0.1");
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(actionDenis, SIGNAL(triggered()), this, SLOT(ouvrirDenis()));
 
     connect(ui->btnAjouter, SIGNAL(clicked()), fenAjout, SLOT(open()));
+    connect(ui->btnCorbeille, SIGNAL(clicked()), fenCorbeille, SLOT(open()));
 
     load();
 
@@ -32,7 +34,30 @@ MainWindow::MainWindow(QWidget *parent) :
         if (i->getClass()=="Tache")
         {
             NOTES::Tache* t= static_cast<NOTES::Tache*>(i);
-            if (t->getStatut()==2) ui->listeTaches->addItem(i->getId());
+            if (t->getStatut()==2)
+            {
+                /*QListWidgetItem* aInserer = new QListWidgetItem(i->getId());
+                for(int row = 0; row < ui->listeTaches->count(); row++)
+                {
+                    NOTES::Tache* item = static_cast<NOTES::Tache*>(getNotePtr(ui->listeTaches->item(row)->text()));
+                    if (item->getEcheance()>=t->getEcheance())
+                    {
+                        if (item->getPriorite()<t->getPriorite())
+                        {
+                            ui->listeTaches->insertItem(row, aInserer);
+                            delete aInserer;
+                            break;
+                        }
+                        else continue;
+                    }
+                 }
+                if (ui->listeTaches->findItems(i->getId(), Qt::MatchExactly).size()==0)
+                {*/
+                    ui->listeTaches->addItem(i->getId());
+                    /*delete aInserer;
+                }*/
+                    //trier listeTaches
+            }
             else ui->listeNotes->addItem(i->getId());
         }
         else ui->listeNotes->addItem(i->getId());
@@ -137,12 +162,62 @@ void MainWindow::chercherFichier()
         ui->editMedia->setText(QDir::toNativeSeparators(fichier));
 }
 
+void MainWindow::demandeConfirmation()
+{
+   QMessageBox* conf = new QMessageBox();
+   conf->setWindowTitle("Confirmation de la suppression");
+   conf->setText("Voulez-vous vraiment supprimer cette note?");
+   conf->setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+   conf->setDefaultButton(QMessageBox::Cancel);
+   QPixmap icon("C:/Users/SilverEye/notepod/delete-512.png");
+   conf->setIconPixmap(icon);
+   conf->setWindowIcon(QIcon("C:/Users/SilverEye/notepod/warning-icon-png-276616.png"));
+   connect(conf, SIGNAL(accepted()), this, SLOT(supprimer()));
+   conf->show();
+}
+
 void MainWindow::sauvegarder(){
 
-    vector<NOTES::MementoNote*> * v = &historique[noteOuverte->getId()];
+    vector<NOTES::MementoNote*>* v = &historique[noteOuverte->getId()];
     v->push_back(noteOuverte->creerMemento());
     ui->anciennesVersions->addItem(noteOuverte->creerMemento()->getModification().toString());
     noteOuverte->sauvegarder(ui);
+}
+
+void MainWindow::supprimer()
+{
+    aSuppr.push_back(noteOuverte);
+    vector<NOTES::Note*>::iterator position = std::find(notes.begin(), notes.end(), getNotePtr(noteOuverte->getId()));
+    if (position != notes.end()) // == myVector.end() means the element was not found
+        notes.erase(position);
+    if (ui->listeTaches->findItems(noteOuverte->getId(), Qt::MatchExactly).size()!=0)
+    {
+        for (int i = 0; i < ui->listeTaches->count(); i++)
+        {
+                if (ui->listeTaches->item(i)->text()==noteOuverte->getId())
+                {
+                    delete ui->listeTaches->item(i);
+                    break;
+                }
+        }
+        //retirer la note de la liste
+    }
+    else if (ui->listeNotes->findItems(noteOuverte->getId(), Qt::MatchExactly).size()!=0)
+    {
+        for (int i = 0; i < ui->listeNotes->count(); i++)
+        {
+                if (ui->listeNotes->item(i)->text()==noteOuverte->getId())
+                {
+                    delete ui->listeNotes->item(i);
+                    break;
+                }
+        }
+        //retirer la note de la liste
+    }
+    getCorbeille()->ajouter(noteOuverte);
+    ui->visualisation->hide();
+    fenCorbeille->open();
+    qDebug()<<"Je supprime"<<aSuppr;
 }
 
 void MainWindow::visualiserNote(QListWidgetItem * i){
@@ -162,14 +237,22 @@ void MainWindow::visualiserNote(QListWidgetItem * i){
     ui->btnParcourir->hide();
     ui->editMedia->hide();
 
-    connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
-    connect(ui->visuPrio, SIGNAL(toggled(bool)), this, SLOT(affPriorite(bool)));
-    connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
-
     NOTES::Note& a = getNote(i->text());
     noteOuverte = &a;
 
     a.visualiser(ui);
+
+    /*ui->visuEcheance->setChecked(false);
+    ui->visuPrio->setChecked(false);*/
+
+    //décocher par défaut, puis recocher en fonction des attributs de i
+
+    connect(ui->visuEcheance, SIGNAL(toggled(bool)), this, SLOT(affEcheance(bool)));
+    connect(ui->visuPrio, SIGNAL(toggled(bool)), this, SLOT(affPriorite(bool)));
+    connect(ui->btnParcourir, SIGNAL(clicked(bool)), this, SLOT(chercherFichier()));
+    connect(ui->btnSuppr, SIGNAL(clicked(bool)), this, SLOT(supprimer()));
+
+
 
     while(ui->anciennesVersions->count()>0)
     {
